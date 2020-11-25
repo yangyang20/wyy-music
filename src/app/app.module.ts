@@ -2,13 +2,14 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { zh_CN } from 'ng-zorro-antd/i18n';
-import {CommonModule, registerLocaleData} from '@angular/common';
+import { registerLocaleData} from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import {CoreModule} from './core/core.module';
 import {NzButtonModule} from 'ng-zorro-antd/button';
 import {NzLayoutModule} from 'ng-zorro-antd/layout';
 import {RouterModule} from '@angular/router';
 import {NzMenuModule} from 'ng-zorro-antd/menu';
+import {NzAvatarModule} from "ng-zorro-antd/avatar";
 
 
 registerLocaleData(zh);
@@ -18,11 +19,12 @@ registerLocaleData(zh);
     AppComponent
   ],
   imports: [
-    CoreModule,
-    NzButtonModule,
-    NzLayoutModule,
-    RouterModule,
-    NzMenuModule,
+      CoreModule,
+      NzButtonModule,
+      NzLayoutModule,
+      RouterModule,
+      NzMenuModule,
+      NzAvatarModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
   bootstrap: [AppComponent]
