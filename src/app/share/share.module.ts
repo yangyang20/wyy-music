@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import {WyUiModule} from "./wy-ui/wy-ui.module";
+
 
 @NgModule({
   declarations: [],
@@ -11,12 +13,14 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     FormsModule,
     NzCarouselModule,
     NzIconModule,
+    WyUiModule,
   ],
   exports:[
     CommonModule,
     FormsModule,
     NzCarouselModule,
     NzIconModule,
+    WyUiModule,
   ]
 })
 export class ShareModule { }

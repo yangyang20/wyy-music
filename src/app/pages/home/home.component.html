@@ -8,5 +8,48 @@
       </div>
     </nz-carousel>
   </app-wy-carousel>
+
+
+
+  <div class="main">
+    <div class="wrap">
+      <div class="left">
+        <div class="sec">
+          <div class="up">
+            <div class="navs">
+              <h2>
+                <i></i>
+                <a>热门推荐</a>
+              </h2>
+              <nav>
+                <a>华语</a>
+                <a>华语</a>
+                <a>华语</a>
+              </nav>
+            </div>
+
+            <a>
+              更多
+<!--              <i nz-icon type="arrow-right" theme="outline"></i>-->
+            </a>
+          </div>
+
+          <div class="down">
+            <div class="down-wrap">
+              <app-singer-sheet class="sheet-item" *ngFor="let item of songSheet" [sheet]="item"></app-singer-sheet>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="right">
+      right
+      </div>
+
+    </div>
+  </div>
+
+
 </div>
 
