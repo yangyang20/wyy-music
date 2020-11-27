@@ -3,6 +3,7 @@ import {HomeService} from "../../service/home.service";
 import {Banner, HotTag, Singer, SongSheet} from '../../service/data-types/common.types';
 import {NzCarouselComponent} from "ng-zorro-antd/carousel";
 import {SingerService} from '../../service/singer.service';
+import {SheetService} from '../../service/sheet.service';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +21,7 @@ export class HomeComponent implements OnInit {
   // @ts-ignore  拿到Carousel的实例
   @ViewChild(NzCarouselComponent,{ status:true }) private nzCarousel: NzCarouselComponent
 
-  constructor(private homeService:HomeService,private singerService:SingerService) {
+  constructor(private homeService:HomeService,private singerService:SingerService,private sheetService:SheetService) {
 
   }
 
@@ -65,5 +66,11 @@ export class HomeComponent implements OnInit {
 
   onChangeSlide(type: 'pre'|'next'){
     this.nzCarousel[type]()
+  }
+
+  onPlaySheet(SongSheetId:number){
+    this.sheetService.playSheet(SongSheetId).subscribe(res=>{
+      console.log(res);
+    })
   }
 }

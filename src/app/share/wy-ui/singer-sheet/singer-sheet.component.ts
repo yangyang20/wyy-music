@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {SongSheet} from "../../../service/data-types/common.types";
 
 @Component({
@@ -12,12 +12,18 @@ export class SingerSheetComponent implements OnInit {
     id:1,
     name:'无数据',
     picUrl:'',
-    playCount:0
+    playCount:0,
+    tracks:[]
   }
+  @Output()onPlay = new EventEmitter<number>();
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
+
+  getSheet(id:number){
+    this.onPlay.emit(id)
+  }
 }

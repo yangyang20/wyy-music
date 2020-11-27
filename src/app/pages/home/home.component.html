@@ -34,7 +34,7 @@
 
           <div class="down">
             <div class="down-wrap">
-              <app-singer-sheet class="sheet-item" *ngFor="let item of songSheet" [sheet]="item"></app-singer-sheet>
+              <app-singer-sheet class="sheet-item" *ngFor="let item of songSheet" [sheet]="item" (onPlay)="onPlaySheet($event)"></app-singer-sheet>
             </div>
           </div>
         </div>
