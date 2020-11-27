@@ -1,7 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {HomeService} from "../../service/home.service";
-import {Banner, HotTag, SongSheet} from "../../service/data-types/common.types";
+import {Banner, HotTag, Singer, SongSheet} from '../../service/data-types/common.types';
 import {NzCarouselComponent} from "ng-zorro-antd/carousel";
+import {SingerService} from '../../service/singer.service';
 
 @Component({
   selector: 'app-home',
@@ -14,11 +15,12 @@ export class HomeComponent implements OnInit {
   banners: Banner[] = []
   tags:HotTag[] = []
   songSheet:SongSheet[] = []
+  singer:Singer[] = []
 
   // @ts-ignore  拿到Carousel的实例
   @ViewChild(NzCarouselComponent,{ status:true }) private nzCarousel: NzCarouselComponent
 
-  constructor(private homeService:HomeService) {
+  constructor(private homeService:HomeService,private singerService:SingerService) {
 
   }
 
@@ -41,11 +43,18 @@ export class HomeComponent implements OnInit {
     })
   }
 
+  getEnterSinger(){
+    this.singerService.getEnterSinger().subscribe(singer=>{
+      this.singer= singer
+    })
+  }
+
 
   ngOnInit(): void {
     this.getBanners()
     this.getHotTags()
     this.getPerosonalSheetList()
+    this.getEnterSinger()
   }
 
 
