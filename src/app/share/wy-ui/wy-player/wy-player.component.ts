@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppStoreModule} from '../../../store';
 import {getCurrentIndex, getCurrentSong, getPlayList, getPlayMode, getSongList} from '../../../store/selectors/player.selectors';
-import {PlayState} from '../../../store/reducers/player.reducer';
+import {Song} from "../../../service/data-types/common.types";
+import {PlayMode} from "./player.type";
 
 @Component({
   selector: 'app-wy-player',
@@ -22,9 +23,36 @@ export class WyPlayerComponent implements OnInit {
     appStore$.pipe(select(getCurrentIndex)).subscribe(index => console.log(index));
     // @ts-ignore
     appStore$.pipe(select(getPlayMode)).subscribe(mode=> console.log(mode));
+    // @ts-ignore
+    appStore$.pipe(select(getCurrentSong)).subscribe((song: PlayState)=> console.log(song));
 
-    // appStore$.pipe(select(getCurrentSong)).subscribe((song: PlayState)=> console.log(song));
+    const stateArr = [
+      {
+        type:getSongList,
+        cb:(list:Song[])=>this.watchList(list)
+      },
+      {
+        type:getPlayList,
+        cb:(list:Song[])=>this.watchList(list)
+      },
+      {
+        type:getCurrentIndex,
+        cb:(currentIndex:number)=>this.watchCurrentIndex(currentIndex)
+      },
+      {
+        type:getPlayMode,
+        cb:(mode:PlayMode)=>this.watchPlayMode(mode)
+      },
+      {
+        type:getCurrentSong,
+        cb:(song:Song)=>this.watchCurrentSong(song)
+      },
+    ]
 
+    stateArr.forEach(item=>{
+      // @ts-ignore
+      appStore$.pipe(select(item.type)).subscribe(item.cb);
+    })
   }
 
   //音量控制是否显示
@@ -35,7 +63,22 @@ export class WyPlayerComponent implements OnInit {
   }
 
 
+  private watchList(list:Song[]){
 
+  }
+
+  private watchCurrentIndex(currentIndex:number){
+
+  }
+
+
+  private watchPlayMode(playMode:PlayMode){
+
+  }
+
+  private watchCurrentSong(song:Song){
+
+  }
 
   toggleVolPanel(){
     this.showVolumnPanel = !this.showVolumnPanel
