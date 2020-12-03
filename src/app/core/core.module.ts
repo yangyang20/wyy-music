@@ -6,6 +6,7 @@ import {ServiceModule} from '../service/service.module';
 import {ShareModule} from '../share/share.module';
 import {PagesModule} from '../pages/pages.module';
 import {AppRoutingModule} from '../app-routing.module';
+import {AppStoreModule} from '../store';
 
 
 
@@ -20,6 +21,7 @@ import {AppRoutingModule} from '../app-routing.module';
     PagesModule,
     ShareModule,
     AppRoutingModule,
+    AppStoreModule,
   ],
   exports: [
     ShareModule,

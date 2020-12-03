@@ -24,12 +24,12 @@ export class SongService {
   getSongList(song:Song|Song[]):Observable<Song[]>{
     const songArr = Array.isArray(song)?song.slice():[song]
     const songids = songArr.map(item=>item.id).join(',')
-    return new Observable((observer) => {
-      this.getSongUrl(songids).subscribe(urls => {
-        observer.next(this.generateSongList(songArr, urls))
-      })
-    })
-
+    // return new Observable((observer) => {
+    //   this.getSongUrl(songids).subscribe(urls => {
+    //     observer.next(this.generateSongList(songArr, urls))
+    //   })
+    // })
+    return this.getSongUrl(songids).pipe(map(urls=>this.generateSongList(songArr,urls)))
   }
 
 

@@ -4,6 +4,9 @@ import {Banner, HotTag, Singer, SongSheet} from '../../service/data-types/common
 import {NzCarouselComponent} from "ng-zorro-antd/carousel";
 import {SingerService} from '../../service/singer.service';
 import {SheetService} from '../../service/sheet.service';
+import {Store} from '@ngrx/store';
+import {AppStoreModule} from '../../store';
+import {SetCurrentIndex, SetPlayList, SetSongList} from '../../store/actions/player.actions';
 
 @Component({
   selector: 'app-home',
@@ -21,9 +24,11 @@ export class HomeComponent implements OnInit {
   // @ts-ignore  拿到Carousel的实例
   @ViewChild(NzCarouselComponent,{ status:true }) private nzCarousel: NzCarouselComponent
 
-  constructor(private homeService:HomeService,private singerService:SingerService,private sheetService:SheetService) {
-
-  }
+  constructor(private homeService:HomeService,
+              private singerService:SingerService,
+              private sheetService:SheetService,
+              private store$:Store<AppStoreModule>
+              ) {}
 
 
   getBanners(){
@@ -69,8 +74,10 @@ export class HomeComponent implements OnInit {
   }
 
   onPlaySheet(SongSheetId:number){
-    this.sheetService.playSheet(SongSheetId).subscribe(res=>{
-      console.log(res);
+    this.sheetService.playSheet(SongSheetId).subscribe(list=>{
+      this.store$.dispatch(SetSongList({songList:list}))
+      this.store$.dispatch(SetPlayList({playList:list}))
+      this.store$.dispatch(SetCurrentIndex({currentIndex:0}))
     })
   }
 }

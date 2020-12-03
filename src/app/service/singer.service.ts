@@ -34,8 +34,6 @@ export class SingerService {
           .set('cat', args.cat)
       }
 
-
-    console.log(params);
     // @ts-ignore
     return this.http.get(this.url+'artist/list',params).pipe(
       // @ts-ignore

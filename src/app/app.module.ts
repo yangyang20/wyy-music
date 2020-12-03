@@ -10,6 +10,9 @@ import {NzLayoutModule} from 'ng-zorro-antd/layout';
 import {RouterModule} from '@angular/router';
 import {NzMenuModule} from 'ng-zorro-antd/menu';
 import {NzAvatarModule} from "ng-zorro-antd/avatar";
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { StoreModule } from '@ngrx/store';
 
 
 registerLocaleData(zh);
