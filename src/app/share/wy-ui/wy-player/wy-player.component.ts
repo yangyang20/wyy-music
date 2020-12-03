@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppStoreModule} from '../../../store';
 import {getCurrentIndex, getCurrentSong, getPlayList, getPlayMode, getSongList} from '../../../store/selectors/player.selectors';
 import {Song} from "../../../service/data-types/common.types";
 import {PlayMode} from "./player.type";
+import {SetCurrentIndex} from '../../../store/actions/player.actions';
 
 @Component({
   selector: 'app-wy-player',
@@ -12,28 +13,42 @@ import {PlayMode} from "./player.type";
 })
 export class WyPlayerComponent implements OnInit {
 
+  songList:Song[]=[]
+  playList:Song[]=[]
+  currentIndex:number=-1
+  currentSong:Song = {
+    id:0,
+    name:'',
+    url:'',
+    ar:[],
+    al:{id:0,name:'',picUrl:''},
+    dt:0,
+  }
+  playMode:PlayMode|undefined
+
+  currentTime: number=0; //当前歌曲播放时长
+  duration: number = 0; //当前歌曲时长
+
+
+  playing:boolean = false //是否正在播放
+
+  songReady:boolean = false;  //是否可以播放
+
+  @ViewChild('audit',{static:true,read:ElementRef})private audit: ElementRef | undefined
+  private auditEl:HTMLAudioElement|undefined
+
   constructor(private store$:Store<AppStoreModule>) {
     // @ts-ignore
     const appStore$ = this.store$.pipe(select('player'));
-    // @ts-ignore
-    appStore$.pipe(select(getSongList)).subscribe(list => console.log(list, 'songList'));
-    // @ts-ignore
-    appStore$.pipe(select(getPlayList)).subscribe(list => console.log(list, 'playList'));
-    // @ts-ignore
-    appStore$.pipe(select(getCurrentIndex)).subscribe(index => console.log(index));
-    // @ts-ignore
-    appStore$.pipe(select(getPlayMode)).subscribe(mode=> console.log(mode));
-    // @ts-ignore
-    appStore$.pipe(select(getCurrentSong)).subscribe((song: PlayState)=> console.log(song));
 
     const stateArr = [
       {
         type:getSongList,
-        cb:(list:Song[])=>this.watchList(list)
+        cb:(list:Song[])=>this.watchList(list,'songList')
       },
       {
         type:getPlayList,
-        cb:(list:Song[])=>this.watchList(list)
+        cb:(list:Song[])=>this.watchList(list,'playList')
       },
       {
         type:getCurrentIndex,
@@ -62,23 +77,91 @@ export class WyPlayerComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngAfterViewInit(){
+    this.auditEl = this.audit?.nativeElement
+  }
 
-  private watchList(list:Song[]){
-
+  private watchList(list:Song[],type:string){
+    // @ts-ignore
+    this[type] = list
   }
 
   private watchCurrentIndex(currentIndex:number){
-
+    this.currentIndex = currentIndex
   }
 
 
   private watchPlayMode(playMode:PlayMode){
-
+    this.playMode = playMode
   }
 
   private watchCurrentSong(song:Song){
+    if (song){
+      this.duration =song.dt
+      this.currentSong = song
+    }
+  }
+
+
+  onPlay(){
+    this.play()
+    this.songReady=true
+  }
+
+  private play(){
+    this.auditEl!.play()
+    this.playing = true
+  }
+
+  getPic(){
+    return this.currentIndex>=0 ? this.currentSong.al.picUrl :'//s4.music.126.net/style/web2/img/default/default_album.jpg'
+  }
+
+  onTimeUpdate(event:HTMLAudioElement){
+    this.currentTime = event.currentTime * 1000
+  }
+
+  //切换播放暂停
+  onToggle(){
+    if (this.songReady){
+      this.playing = !this.playing
+      if (this.playing){
+        this.auditEl?.play()
+      }else {
+        this.auditEl?.pause()
+      }
+    }else if (this.playList.length){
+      this.updateIndex(0)
+    }
 
   }
+
+  //上一曲
+  prev(index:number){
+    if (this.songList.length && this.songReady){
+      let songIndex = index <0?this.songList.length-1:index
+      this.updateIndex(songIndex)
+    }
+  }
+
+  //下一曲
+  next(index:number){
+    if (this.songList.length && this.songReady){
+      let songIndex = index >=this.songList.length?0:index
+      this.updateIndex(songIndex)
+    }
+  }
+
+  //更新播放索引
+  private updateIndex(index: number) {
+    if (index<0){
+      index = 0
+    }
+    this.store$.dispatch(SetCurrentIndex({ currentIndex: index }));
+    this.songReady = false;
+  }
+
+
 
   toggleVolPanel(){
     this.showVolumnPanel = !this.showVolumnPanel
