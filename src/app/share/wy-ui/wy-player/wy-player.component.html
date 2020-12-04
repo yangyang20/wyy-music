@@ -40,7 +40,7 @@
       <div class="ctrl">
         <i class="volume" title="音量" (click)="toggleVolPanel()"></i>
         <i [class]="playMode.type" [title]="playMode.label" (click)="changeMode()"></i>
-        <p class="open">
+        <p class="open" (click)="togglePanel()">
           <span></span>
         </p>
 
@@ -49,7 +49,14 @@
         </div>
       </div>
 
-    <app-wy-player-panel></app-wy-player-panel>
+    <app-wy-player-panel [(show)]="panelShow"
+                         (showChange)="panelShow=$event"
+                         [(currentIndex)]="currentIndex"
+                         [currentSong]="currentSong"
+                         (currentIndexChange)="updateIndex($event)"
+                         [songList]="playList"
+    >
+    </app-wy-player-panel>
     </div>
   </div>
   <audio #audio (ended)="onEnded()" [src]="currentSong?.url" [volume]="volume" (canplay)="onPlay()" (timeupdate)="onTimeUpdate(audio)"></audio>

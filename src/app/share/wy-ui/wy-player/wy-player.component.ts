@@ -115,6 +115,8 @@ export class WyPlayerComponent implements OnInit {
   //当前歌曲的缓冲条的位置
   bufferPercent:number=0
 
+  //歌曲播放面板是否显示
+  panelShow:boolean = false
 
   ngOnInit(): void {
   }
@@ -218,7 +220,7 @@ export class WyPlayerComponent implements OnInit {
   }
 
   //更新播放索引
-  private updateIndex(index: number) {
+  public updateIndex(index: number) {
     if (index<0){
       index = 0
     }
@@ -267,6 +269,10 @@ export class WyPlayerComponent implements OnInit {
     this.audioEl?.play()
   }
 
+  //切换播放面板的显示与隐藏
+  togglePanel(){
+    this.panelShow = !this.panelShow
+  }
 
 
 }

@@ -4,11 +4,12 @@ import { WyPlayerComponent } from './wy-player.component';
 import {WySliderModule} from '../wy-slider/wy-slider.module';
 import {FormsModule} from '@angular/forms';
 import { WyPlayerPanelComponent } from './wy-player-panel/wy-player-panel.component';
+import { WyScrollComponent } from './wy-scroll/wy-scroll.component';
 
 
 
 @NgModule({
-  declarations: [WyPlayerComponent, WyPlayerPanelComponent],
+  declarations: [WyPlayerComponent, WyPlayerPanelComponent, WyScrollComponent],
   exports: [
     WyPlayerComponent,
   ],

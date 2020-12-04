@@ -1,4 +1,4 @@
-<div class="play-panel show">
+<div class="play-panel" [class.show]="show">
   <div class="hd">
     <div class="hdc">
       <h4>播放列表</h4>
@@ -7,19 +7,19 @@
       </div>
       <span class="line"></span>
       <div class="clear-all">
-        <i class="icon truch"></i>清除
+        <i class="icon trush"></i>清除
       </div>
       <p class="playing-name">歌曲名称</p>
-      <i class="icon close"></i>
+      <i class="icon close" (click)="panelClose()"></i>
     </div>
   </div>
 
   <div class="bd">
     <img src="//music.163.com/api/img/blur/109951163826278397" class="imgbg">
     <div class="msk"></div>
-    <div class="list-warp">
+    <app-wy-scroll class="list-wrap" [data]="songList" >
       <ul>
-        <li *ngFor="let item of SongList">
+        <li *ngFor="let item of songList;index as i" [class.current]="currentIndex === i" (click)="changeSong(i)">
           <i class="col arrow"></i>
           <div class="col name ellipsis">{{item.name}}</div>
           <div class="col icons">
@@ -28,15 +28,15 @@
             <i class="ico truch" title="删除"></i>
           </div>
           <div class="singers clearfix ellipsis">
-            <div class="singer-item" *ngFor="let ar of item.ar;last as isLast">
-              <a href="" class="col ellipsis">歌手1</a>
-              <span>/</span>
+            <div class="singer-item" *ngFor="let ar of item.ar;last as isLast" >
+              <a href="" class="col ellipsis">{{ar.name}}</a>
+              <span [hidden]="isLast">/</span>
             </div>
           </div>
-          <div class="col duration">04:33</div>
+          <div class="col duration">{{item.dt |date:'mm:ss'}}</div>
           <div class="col link"></div>
         </li>
       </ul>
-    </div>
+    </app-wy-scroll>
   </div>
 </div>
