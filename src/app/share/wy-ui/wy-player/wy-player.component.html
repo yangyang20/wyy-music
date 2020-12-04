@@ -26,10 +26,10 @@
         </div>
         <div class="bar">
           <div class="slider-wrap">
-            <app-wy-slider></app-wy-slider>
+            <app-wy-slider [(sliderValue)]="percent"  (sliderValueChange)="percentChange($event)" [bufferValue]="bufferPercent"></app-wy-slider>
           </div>
           <span class="time">
-            <em>{{currentTime | date:'mm:ss'}}</em>/ {{duration | date:'mm:ss'}}
+            <em>{{currentTime *1000 | date:'mm:ss'}}</em>/ {{duration *1000 | date:'mm:ss'}}
           </span>
         </div>
       </div>
@@ -39,20 +39,20 @@
       </div>
       <div class="ctrl">
         <i class="volume" title="音量" (click)="toggleVolPanel()"></i>
-        <i class="loop" title="循环"></i>
+        <i [class]="playMode.type" [title]="playMode.label" (click)="changeMode()"></i>
         <p class="open">
           <span></span>
         </p>
 
         <div class="control-vol" [hidden]="!showVolumnPanel">
-          <app-wy-slider [wyVertical]="true"  ></app-wy-slider>
+          <app-wy-slider [wyVertical]="true" [(sliderValue)]="volumeValue" [moveEmit]="true" (sliderValueChange)="volumeChane($event)"  ></app-wy-slider>
         </div>
       </div>
 
-
+    <app-wy-player-panel></app-wy-player-panel>
     </div>
   </div>
-  <audio #audit [src]="currentSong?.url" (canplay)="onPlay()" (timeupdate)="onTimeUpdate(audit)"></audio>
+  <audio #audio (ended)="onEnded()" [src]="currentSong?.url" [volume]="volume" (canplay)="onPlay()" (timeupdate)="onTimeUpdate(audio)"></audio>
 </div>
 
 

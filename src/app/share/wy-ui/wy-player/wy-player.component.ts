@@ -4,7 +4,29 @@ import {AppStoreModule} from '../../../store';
 import {getCurrentIndex, getCurrentSong, getPlayList, getPlayMode, getSongList} from '../../../store/selectors/player.selectors';
 import {Song} from "../../../service/data-types/common.types";
 import {PlayMode} from "./player.type";
-import {SetCurrentIndex} from '../../../store/actions/player.actions';
+import {SetCurrentIndex, SetPlayList, SetPlayMode} from '../../../store/actions/player.actions';
+import {findIndex, shuffle} from "../../../utils/array";
+
+
+const modeTypes: PlayMode[] = [{
+  type: 'loop',
+  label: '循环'
+}, {
+  type: 'random',
+  label: '随机'
+}, {
+  type: 'singleLoop',
+  label: '单曲循环'
+}];
+
+
+enum TipTitles {
+  Add = '已添加到列表',
+  Play = '已开始播放'
+}
+
+
+
 
 @Component({
   selector: 'app-wy-player',
@@ -12,6 +34,9 @@ import {SetCurrentIndex} from '../../../store/actions/player.actions';
   styleUrls: ['./wy-player.component.less']
 })
 export class WyPlayerComponent implements OnInit {
+
+  //todo 拖动播放不顺畅
+
 
   songList:Song[]=[]
   playList:Song[]=[]
@@ -24,18 +49,25 @@ export class WyPlayerComponent implements OnInit {
     al:{id:0,name:'',picUrl:''},
     dt:0,
   }
-  playMode:PlayMode|undefined
 
   currentTime: number=0; //当前歌曲播放时长
-  duration: number = 0; //当前歌曲时长
+  duration: number = 0; //当前歌曲时间
 
 
   playing:boolean = false //是否正在播放
-
   songReady:boolean = false;  //是否可以播放
 
-  @ViewChild('audit',{static:true,read:ElementRef})private audit: ElementRef | undefined
-  private auditEl:HTMLAudioElement|undefined
+  //当前播放模式
+  playMode:PlayMode = {
+    type:'loop',
+    label:'循环'
+  }
+  //播放模式的变换次数
+  modeCount:number=0
+
+
+  @ViewChild('audio',{static:true,read:ElementRef})private audio: ElementRef | undefined
+  private audioEl:HTMLAudioElement|undefined
 
   constructor(private store$:Store<AppStoreModule>) {
     // @ts-ignore
@@ -72,13 +104,23 @@ export class WyPlayerComponent implements OnInit {
 
   //音量控制是否显示
   showVolumnPanel:boolean = false
-  //音量
-  volume:number = 50
+  //音量是0~1之前
+  volume:number = 0.3
+  //音量转换为滑块的值
+  volumeValue:number = this.volume*100
+
+  //设置播放进度条的位置
+  percent:number=0
+
+  //当前歌曲的缓冲条的位置
+  bufferPercent:number=0
+
+
   ngOnInit(): void {
   }
 
   ngAfterViewInit(){
-    this.auditEl = this.audit?.nativeElement
+    this.audioEl = this.audio?.nativeElement
   }
 
   private watchList(list:Song[],type:string){
@@ -93,11 +135,23 @@ export class WyPlayerComponent implements OnInit {
 
   private watchPlayMode(playMode:PlayMode){
     this.playMode = playMode
+    //模式改变要改变的歌曲的播放顺序
+    if (this.songList){
+      let list = this.songList.slice()
+      if (playMode.type == 'random'){
+        list = shuffle(this.songList);
+        this.store$.dispatch(SetPlayList({playList:list}))
+        let newIndex = findIndex(list,this.currentSong)
+        this.updateIndex(newIndex)
+      }
+    }
+
+
   }
 
   private watchCurrentSong(song:Song){
     if (song){
-      this.duration =song.dt
+      this.duration =song.dt/1000
       this.currentSong = song
     }
   }
@@ -109,16 +163,27 @@ export class WyPlayerComponent implements OnInit {
   }
 
   private play(){
-    this.auditEl!.play()
+    this.audioEl!.play()
     this.playing = true
   }
 
+  //歌曲图片
   getPic(){
     return this.currentIndex>=0 ? this.currentSong.al.picUrl :'//s4.music.126.net/style/web2/img/default/default_album.jpg'
   }
 
+  //播放时间更新
   onTimeUpdate(event:HTMLAudioElement){
-    this.currentTime = event.currentTime * 1000
+    this.currentTime = event.currentTime
+    //播放时间是毫秒计数,播放时长是不固定的，滑块总长是固定的
+    this.percent = (this.currentTime / this.duration) * 100;
+    if (this.audioEl){
+      const buffered = this.audioEl.buffered;
+      if (buffered.length && this.bufferPercent < 100) {
+        this.bufferPercent = (buffered.end(0) / this.duration) * 100;
+      }
+    }
+
   }
 
   //切换播放暂停
@@ -126,9 +191,9 @@ export class WyPlayerComponent implements OnInit {
     if (this.songReady){
       this.playing = !this.playing
       if (this.playing){
-        this.auditEl?.play()
+        this.audioEl?.play()
       }else {
-        this.auditEl?.pause()
+        this.audioEl?.pause()
       }
     }else if (this.playList.length){
       this.updateIndex(0)
@@ -162,8 +227,46 @@ export class WyPlayerComponent implements OnInit {
   }
 
 
+  //动态改变歌曲播放位置
+  percentChange(value:number){
+    const currentTime = this.duration * (value / 100);
+    if (this.currentSong){
+      this.audioEl!.currentTime = currentTime
+      console.log('当前播放时间',this.audioEl!.currentTime);
+    }
+  }
 
+  //控制音量大小
+  volumeChane(per:number){
+    this.volume = per/100
+  }
+
+  //控制音量面板是否显示
   toggleVolPanel(){
     this.showVolumnPanel = !this.showVolumnPanel
   }
+
+  //改变当前播放模式
+  changeMode(){
+    this.store$.dispatch(SetPlayMode({ playMode: modeTypes[++this.modeCount % 3] }));
+  }
+
+  //播放结束
+  onEnded(){
+    this.playing = false;
+    if (this.playMode.type === 'singleLoop') {
+      this.loop();
+    } else {
+      this.next(this.currentIndex + 1);
+    }
+  }
+
+  //单曲循环
+  private loop(){
+    this.audioEl!.currentTime=0
+    this.audioEl?.play()
+  }
+
+
+
 }

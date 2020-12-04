@@ -1,12 +1,10 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
-  ElementRef,
+  ElementRef, EventEmitter,
   Inject,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
+  Input, OnChanges,
+  OnInit, Output, SimpleChanges,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
@@ -19,6 +17,8 @@ import {inArray} from '../../../utils/array';
 
 import {limitNumberInRange,getPercent} from '../../../utils/number';
 
+
+
 @Component({
   selector: 'app-wy-slider',
   templateUrl: './wy-slider.component.html',
@@ -26,13 +26,18 @@ import {limitNumberInRange,getPercent} from '../../../utils/number';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WySliderComponent implements OnInit {
+export class WySliderComponent implements OnInit,OnChanges {
 
   @ViewChild('wySlider', {static: true, read: ElementRef}) wySlider!: ElementRef;
 
   @Input() wyVertical = false;  //是否垂直移动
   @Input() wyMin = 0;
   @Input() wyMax = 100;
+
+
+  @Input('sliderValue') sliderValue:number=0  //父组件传入的滑块值
+  @Output() sliderValueChange = new EventEmitter<number>()
+
 
   private sliderDom!: HTMLDivElement;
   private dragStart$: Observable<number> = new Observable<number>();
@@ -44,9 +49,14 @@ export class WySliderComponent implements OnInit {
 
   private isDragging = false;     //是否在订阅
 
-  private value = 0;
+  private value = 0;  //当前滑块所在位置
   public offset = 0;   //滑块条长度
-  public bufferOffset = 70; //缓冲条的长度
+
+  @Input()moveEmit = false  //滑动时要不要发送当前值
+
+
+  @Input()bufferValue:number=0
+  public bufferOffset = 0; //缓冲条的长度
   constructor(@Inject(DOCUMENT) private doc: Document,private cdr: ChangeDetectorRef) {
 
   }
@@ -61,6 +71,17 @@ export class WySliderComponent implements OnInit {
     this.createDraggingObservables()
     this.subscribeDrag(['start']);
   }
+
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['sliderValue'] && !this.isDragging){
+      this.setValue(this.sliderValue)
+    }
+    if (changes['bufferValue']){
+      this.bufferOffset = this.formatValue(this.bufferValue)
+    }
+  }
+
 
   //根据拖动或者的点击的位置得出进度条的长度
 
@@ -128,10 +149,13 @@ export class WySliderComponent implements OnInit {
     if (this.isDragging) {
       this.setValue(value)
       this.cdr.markForCheck();
+      if (this.moveEmit){
+        this.sliderValueChange.emit(this.sliderValue)
+      }
     }
-
   }
   private onDragEnd() {
+    this.sliderValueChange.emit(this.sliderValue)
     this.toggleDragMoving(false);
     this.cdr.markForCheck();
   }
@@ -143,16 +167,19 @@ export class WySliderComponent implements OnInit {
       if (this.isDragging) { return; }
       this.value = this.formatValue(value);
       this.updateTrackAndHandles();
+      this.sliderValue = this.value
     } else if (!this.valuesEqual(this.value, value)) {
-      this.value = value;
+      this.value = this.formatValue(value);
       this.updateTrackAndHandles();
+      this.sliderValue = this.value
     }
+
   }
 
   //优化value值为nan的情况(nan是number类型)
   private formatValue(value: number): number {
     let res:number;
-    if (isNaN(value)) {
+    if (isNaN(value)||value===null) {
       res = this.wyMin;
     } else {
       res = limitNumberInRange(value as number, this.wyMin, this.wyMax);
@@ -205,7 +232,7 @@ export class WySliderComponent implements OnInit {
   //订阅
   private subscribeDrag(events: string[] = ['start', 'move', 'end']) {
     if (inArray(events, 'start') && this.dragStart$ && !this.dragStart_) {
-      this.dragStart_ = this.dragStart$.subscribe(position=>this.onDragStart(position));
+      this.dragStart_ = this.dragStart$.subscribe(value=>this.onDragStart(value));
     }
     if (inArray(events, 'move') && this.dragMove$ && !this.dragMove_) {
       this.dragMove_ = this.dragMove$.subscribe(this.onDragMove.bind(this));
@@ -239,6 +266,8 @@ export class WySliderComponent implements OnInit {
     const offset = getElementOffset(this.sliderDom)
     return this.wyVertical?offset.top:offset.left
   }
+
+
 
 
 }
