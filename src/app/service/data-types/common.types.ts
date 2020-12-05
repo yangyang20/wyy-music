@@ -47,3 +47,10 @@ export interface SongUrl{
   id:number,
   url:string,
 }
+
+
+//歌词
+export interface Lyric {
+  lyric: string;
+  tlyric: string;
+}

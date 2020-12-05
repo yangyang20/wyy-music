@@ -7,13 +7,14 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
-  ViewChild, ElementRef
+  ViewChild, ElementRef, Output,EventEmitter
 } from '@angular/core';
 
 import BScroll from '@better-scroll/core';
 import ScrollBar from '@better-scroll/scroll-bar';
 import MouseWheel from '@better-scroll/mouse-wheel';
 import {timer} from 'rxjs';
+
 
 
 BScroll.use(MouseWheel);
@@ -38,11 +39,13 @@ export class WyScrollComponent implements OnInit ,AfterViewInit,OnChanges{
   @Input() data:any = []
 
   @Input() refreshDelay = 50; //延迟的刷新时间
-  private bs: BScroll|undefined;
+  private bs!: BScroll;
 
   @ViewChild('wrap',{static:true,read:ElementRef})private wrapRef:ElementRef|undefined
-  constructor() { }
+  constructor(readonly el:ElementRef) { }
 
+
+  @Output() private onScrollEnd = new EventEmitter<number>();
   ngOnInit(): void {
 
   }
@@ -58,11 +61,13 @@ export class WyScrollComponent implements OnInit ,AfterViewInit,OnChanges{
       },
       mouseWheel: {}
     })
+    //滚动即将结束
+    this.bs.scroller.actions.hooks.on('scrollEnd', (pos:any) => this.onScrollEnd.emit(<number>pos.y));
   }
 
 
   private refresh() {
-    this.bs!.refresh();
+    this.bs.refresh();
   }
 
   refreshScroll() {
@@ -71,5 +76,7 @@ export class WyScrollComponent implements OnInit ,AfterViewInit,OnChanges{
     });
   }
 
-
+  scrollToElement(...args:any) {
+    this.bs.scrollToElement.apply(this.bs, args);
+  }
 }

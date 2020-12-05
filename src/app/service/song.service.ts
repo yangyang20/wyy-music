@@ -3,7 +3,8 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {API_CONFIG} from './service.module';
 import {map} from 'rxjs/operators';
 import {observable, Observable} from 'rxjs';
-import {Song, SongUrl} from './data-types/common.types';
+import {Lyric, Song, SongUrl} from './data-types/common.types';
+import {WyLyricOriginal} from "../share/wy-ui/wy-player/wy-player-panel/wy-lyric";
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,7 @@ export class SongService {
       .pipe(map((res:{data:SongUrl[]}) => res.data))
   }
 
+  //获取歌曲列表
   getSongList(song:Song|Song[]):Observable<Song[]>{
     const songArr = Array.isArray(song)?song.slice():[song]
     const songids = songArr.map(item=>item.id).join(',')
@@ -45,4 +47,25 @@ export class SongService {
 
     return resurt
   }
+
+  getLyric(id:number):Observable<Lyric>{
+    const params = {params:new HttpParams().set('id',id.toString())}
+    return this.http.get<WyLyricOriginal>(this.url + 'lyric',params).
+    pipe(map((res:WyLyricOriginal)=>{
+      if (res.lrc){
+        return {
+          lyric: res.lrc.lyric,
+          tlyric: res.tlyric.lyric,
+        };
+      }else {
+        console.log(id);
+        return {
+          lyric: '',
+          tlyric: '',
+        };
+      }
+    }))
+  }
+
+
 }

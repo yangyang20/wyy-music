@@ -73,6 +73,7 @@ export class WyPlayerComponent implements OnInit {
     // @ts-ignore
     const appStore$ = this.store$.pipe(select('player'));
 
+
     const stateArr = [
       {
         type:getSongList,
@@ -224,8 +225,9 @@ export class WyPlayerComponent implements OnInit {
     if (index<0){
       index = 0
     }
+
     this.store$.dispatch(SetCurrentIndex({ currentIndex: index }));
-    this.songReady = false;
+    // this.songReady = false;
   }
 
 
