@@ -37,6 +37,15 @@ export class WyPlayerPanelComponent implements OnInit,OnChanges {
   //当前播放歌曲的歌词
   currentLyric:BaseLyricLine[] = []
 
+  //当前高亮的歌词行
+  currentLineNum:number=0
+  //间隔几行开始滚动
+  private startLine = 2;
+  //当前播放时间
+  @Input()currentTime:number=0
+
+  private wylyric!:WyLyric
+
   constructor(private songService:SongService) { }
 
   ngOnInit(): void {
@@ -47,18 +56,25 @@ export class WyPlayerPanelComponent implements OnInit,OnChanges {
       if (!changes.show.firstChange && this.show) {
         //first是指第一个组件
         this.wyScroll.first.refreshScroll();
+        this.wyScroll.last.refreshScroll();
         timer(80).subscribe(() => {
           if (this.currentSong) {
             this.scrollToCurrent(0);
           }
         })
+      }
+    }
 
-
+    if (changes['currentTime']){
+      if (this.show){
+          this.scrollToLyric(300);
       }
     }
 
     if (changes['currentSong'] && this.currentSong.id>0){
+      this.wyScroll.last.refreshScroll();
       this.getLyric(this.currentSong.id)
+      this.wyScroll.last.scrollTo(0, 0);
     }
   }
 
@@ -91,10 +107,27 @@ export class WyPlayerPanelComponent implements OnInit,OnChanges {
 
   //获取歌词
   getLyric(id:number){
-    id = 1457707546
+    // id = 1457707546
      this.songService.getLyric(id).subscribe(lyric=>{
-      let wylyric = new WyLyric(lyric)
-       this.currentLyric = wylyric.lines
+       this.wylyric = new WyLyric(lyric)
+       this.currentLyric = this.wylyric.lines
+       if (this.wylyric.lrc.tlyric){
+         this.startLine=1
+       }
     })
+
+  }
+
+  //歌词随着时间滚动
+  private scrollToLyric(speed:number=300){
+    const time = this.currentTime * 1000
+    this.currentLineNum = this.wylyric.findCurNum(time)-1
+    const songListRefs = this.wyScroll.last.el.nativeElement.querySelectorAll('ul li')
+    if (songListRefs && this.currentLineNum){
+      const currentLyricLine = songListRefs[this.currentLineNum-this.startLine]
+      if (currentLyricLine){
+        this.wyScroll.last.scrollToElement(currentLyricLine,speed,false,false)
+      }
+    }
   }
 }

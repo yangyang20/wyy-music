@@ -37,7 +37,7 @@ export interface WyLyricOriginal {
 }
 
 export class WyLyric {
-  private lrc: Lyric;
+  lrc: Lyric;
 
   lines: LyricLine[] = [];
 
@@ -59,7 +59,7 @@ export class WyLyric {
     lineArr.forEach(line=>{
       this.makeLine(line)
     })
-    console.log(this.lines);
+    // console.log(this.lines);
   }
 
   private generTLyric(){
@@ -67,16 +67,16 @@ export class WyLyric {
     // const lineCnArr = this.lrc.tlyric.split("\n").filter(item => timeExp.exec(item) !== null)
     lineArr.forEach(line=>{
 
-
       let timeArr = timeExp.exec(line)
       if (timeArr){
-        const timeCnExp = `/${timeArr[0]}(.*?)\[(\d{1,2}):(\d{2})(?:\.(\d{2,3}))?\]/`
-        // console.log(timeCnExp);
+        let temp = timeArr[0].substring(1, timeArr[0].length - 1)
+        const timeCnExp = `${temp}.*?([一-龥]+).*?`
         const cnExp = new RegExp(timeCnExp)
         const lineCnstr = cnExp.exec(this.lrc.tlyric)
         if (lineCnstr){
-          console.log(line);
-          console.log(lineCnstr[0]);
+          this.makeLine(line,lineCnstr[1])
+        }else{
+          this.makeLine(line)
         }
       }
 
@@ -102,4 +102,12 @@ export class WyLyric {
     const time = Number(lineTimeArr[1]) * 60 * 1000 + Number(lineTimeArr[2]) * 1000 + _thirdResult;
     return time
   }
+
+
+  findCurNum(time: number): number {
+    const index = this.lines.findIndex(item => time <= item.time);
+    return index === -1 ? this.lines.length - 1 : index;
+  }
+
+
 }
