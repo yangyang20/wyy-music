@@ -1,8 +1,8 @@
 import {PlayState} from '../reducers/player.reducer';
-import {createSelector} from '@ngrx/store';
+import {createFeatureSelector, createSelector} from '@ngrx/store';
 
 const selectPlayerStates = (status:PlayState)=>status
-
+export const getPlayer = createFeatureSelector<PlayState>('player');
 export const getPlaying = createSelector(selectPlayerStates,(status:PlayState)=>status.playing)
 export const getPlayList = createSelector(selectPlayerStates,(status:PlayState)=>status.playList)
 export const getSongList = createSelector(selectPlayerStates,(status:PlayState)=>status.songList)

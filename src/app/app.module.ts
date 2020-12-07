@@ -13,6 +13,8 @@ import {NzAvatarModule} from "ng-zorro-antd/avatar";
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { StoreModule } from '@ngrx/store';
+import {NzMessageModule} from 'ng-zorro-antd/message';
+import {NzModalModule} from 'ng-zorro-antd/modal';
 
 
 registerLocaleData(zh);
@@ -28,6 +30,8 @@ registerLocaleData(zh);
       RouterModule,
       NzMenuModule,
       NzAvatarModule,
+      NzMessageModule,
+      NzModalModule
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
   bootstrap: [AppComponent]

@@ -6,8 +6,8 @@
         <i class="icon" title="收藏全部"></i>收藏全部
       </div>
       <span class="line"></span>
-      <div class="clear-all">
-        <i class="icon trush"></i>清除
+      <div class="clear-all" (click)="clearSongList()">
+        <i class="icon trush"></i>清空
       </div>
       <p class="playing-name">歌曲名称</p>
       <i class="icon close" (click)="panelClose()"></i>
@@ -25,7 +25,7 @@
           <div class="col icons">
             <i class="ico like" title="收藏"></i>
             <i class="ico share" title="分享"></i>
-            <i class="ico truch" title="删除"></i>
+            <i class="ico trush" title="删除" (click)="deleteSong(i)"></i>
           </div>
           <div class="singers clearfix ellipsis">
             <div class="singer-item" *ngFor="let ar of item.ar;last as isLast" >

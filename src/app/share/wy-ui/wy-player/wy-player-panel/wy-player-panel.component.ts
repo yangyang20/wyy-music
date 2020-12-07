@@ -43,6 +43,10 @@ export class WyPlayerPanelComponent implements OnInit,OnChanges {
   private startLine = 2;
   //当前播放时间
   @Input()currentTime:number=0
+  //删除歌曲
+  @Output()onDeleteSong = new EventEmitter<number>()
+  @Output()OnClearSong = new EventEmitter<void>()
+
 
   private wylyric!:WyLyric
 
@@ -129,5 +133,15 @@ export class WyPlayerPanelComponent implements OnInit,OnChanges {
         this.wyScroll.last.scrollToElement(currentLyricLine,speed,false,false)
       }
     }
+  }
+
+
+  //删除歌曲
+  deleteSong(songIndex:number){
+    this.onDeleteSong.emit(songIndex)
+  }
+  //清空歌曲
+  clearSongList(){
+    this.OnClearSong.emit()
   }
 }

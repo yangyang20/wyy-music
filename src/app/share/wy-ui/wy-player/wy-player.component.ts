@@ -4,8 +4,11 @@ import {AppStoreModule} from '../../../store';
 import {getCurrentIndex, getCurrentSong, getPlayList, getPlayMode, getSongList} from '../../../store/selectors/player.selectors';
 import {Song} from "../../../service/data-types/common.types";
 import {PlayMode} from "./player.type";
-import {SetCurrentIndex, SetPlayList, SetPlayMode} from '../../../store/actions/player.actions';
+import {SetCurrentIndex, SetPlayList, SetPlayMode, SetSongList} from '../../../store/actions/player.actions';
 import {findIndex, shuffle} from "../../../utils/array";
+import {BatchActionsService} from '../../../store/batch-actions.service';
+import {NzMessageModule} from 'ng-zorro-antd/message';
+import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
 
 
 const modeTypes: PlayMode[] = [{
@@ -66,10 +69,15 @@ export class WyPlayerComponent implements OnInit {
   modeCount:number=0
 
 
+  //
+
+
   @ViewChild('audio',{static:true,read:ElementRef})private audio: ElementRef | undefined
   private audioEl:HTMLAudioElement|undefined
 
-  constructor(private store$:Store<AppStoreModule>) {
+  constructor(private store$:Store<AppStoreModule>,
+              private batchActionsServe: BatchActionsService,
+              private nzModelService:NzModalService) {
     // @ts-ignore
     const appStore$ = this.store$.pipe(select('player'));
 
@@ -276,5 +284,19 @@ export class WyPlayerComponent implements OnInit {
     this.panelShow = !this.panelShow
   }
 
+  //删除歌曲
+  deleteSong(songIndex:number){
+    this.batchActionsServe.deleteSong(songIndex)
+  }
 
+  //清空歌曲
+  clearSongList(){
+    this.nzModelService.confirm({
+      nzTitle:'确认清空列表吗?',
+      nzOnOk:()=>{
+        this.batchActionsServe.clearSongList()
+      }
+    })
+
+  }
 }

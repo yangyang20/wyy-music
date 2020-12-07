@@ -56,6 +56,8 @@
                          (currentIndexChange)="updateIndex($event)"
                          [songList]="playList"
                          [currentTime]="currentTime"
+                         (onDeleteSong)="deleteSong($event)"
+                         (OnClearSong)="clearSongList()"
     >
     </app-wy-player-panel>
     </div>
