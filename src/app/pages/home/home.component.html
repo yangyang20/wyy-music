@@ -22,7 +22,7 @@
                 <a>热门推荐</a>
               </h2>
               <nav>
-                <a *ngFor="let item of tags">{{item.name}}</a>
+                <a *ngFor="let item of tags" [routerLink]="['/sheet',{cat:item.name}]">{{item.name}}</a>
               </nav>
             </div>
 
@@ -34,7 +34,12 @@
 
           <div class="down">
             <div class="down-wrap">
-              <app-singer-sheet class="sheet-item" *ngFor="let item of songSheet" [sheet]="item" (onPlay)="onPlaySheet($event)"></app-singer-sheet>
+              <app-singer-sheet class="sheet-item"
+                                *ngFor="let item of songSheet"
+                                [sheet]="item"
+                                (onPlay)="onPlaySheet($event)">
+
+              </app-singer-sheet>
             </div>
           </div>
         </div>

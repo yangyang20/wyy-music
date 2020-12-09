@@ -37,9 +37,10 @@ export interface Song {
 export interface SongSheet {
   id:number,
   name:string,
-  picUrl:string,
+  picUrl?:string,
   playCount:number,
   tracks:Song[],
+  coverImgUrl?:string,
 }
 
 //播放地址
@@ -53,4 +54,18 @@ export interface SongUrl{
 export interface Lyric {
   lyric: string;
   tlyric: string;
+}
+
+//歌单
+export interface SheetParams {
+  offset: number;
+  limit: number;
+  order: 'new' | 'hot';
+  cat: string;
+}
+
+// 歌单列表
+export interface SheetList {
+  playlists: SongSheet[];
+  total: number;
 }

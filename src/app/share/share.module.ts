@@ -5,6 +5,7 @@ import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import {WyUiModule} from "./wy-ui/wy-ui.module";
 import {WyPlayerModule} from './wy-ui/wy-player/wy-player.module';
+import {NzRadioModule} from 'ng-zorro-antd/radio';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import {WyPlayerModule} from './wy-ui/wy-player/wy-player.module';
     NzIconModule,
     WyUiModule,
     WyPlayerModule,
+    NzRadioModule
   ],
   exports:[
     CommonModule,
@@ -24,6 +26,7 @@ import {WyPlayerModule} from './wy-ui/wy-player/wy-player.module';
     NzIconModule,
     WyUiModule,
     WyPlayerModule,
+    NzRadioModule
   ]
 })
 export class ShareModule { }
