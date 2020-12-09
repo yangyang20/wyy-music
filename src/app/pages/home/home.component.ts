@@ -21,8 +21,8 @@ export class HomeComponent implements OnInit {
   songSheet:SongSheet[] = []
   singer:Singer[] = []
 
-  // @ts-ignore  拿到Carousel的实例
-  @ViewChild(NzCarouselComponent,{ status:true }) private nzCarousel: NzCarouselComponent
+
+  @ViewChild(NzCarouselComponent,{ static:true }) private nzCarousel!: NzCarouselComponent
 
   constructor(private homeService:HomeService,
               private singerService:SingerService,

@@ -1,5 +1,5 @@
 <ng-container>
-  <a class="cover">
+  <a class="cover" [routerLink]="['/sheetInfo',sheet.id]">
     <img [src]="sheet.picUrl" [alt]="sheet.name">
     <div class="bottom">
       <div class="num">

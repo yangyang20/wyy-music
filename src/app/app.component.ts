@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import {User} from './service/data-types/member.type';
+import {Observable} from "rxjs";
+import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
+
 
 @Component({
   selector: 'app-root',
@@ -21,7 +24,13 @@ export class AppComponent {
 
   user: User | undefined;
 
-  constructor() {
+  routeTitle = '';
+  private navEnd!: Observable<NavigationEnd>;
+  constructor(private activateRoute:ActivatedRoute,private router:Router) {
+
 
   }
+
+
+
 }

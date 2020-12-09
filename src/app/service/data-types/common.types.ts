@@ -41,6 +41,19 @@ export interface SongSheet {
   playCount:number,
   tracks:Song[],
   coverImgUrl?:string,
+  creator?:Creator,
+  createTime?:number,
+  subscribedCount?:number,
+  shareCount?:number,
+  tags?:string[],
+  userId?:number,
+  subscribed?:boolean
+}
+
+export interface Creator {
+  avatarUrl:string,
+  nickname:string,
+
 }
 
 //播放地址

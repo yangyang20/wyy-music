@@ -48,9 +48,10 @@ export class WySliderComponent implements OnInit,OnChanges {
   private dragEnd_: Subscription | null = null;
 
   private isDragging = false;     //是否在订阅
-
   private value = 0;  //当前滑块所在位置
   public offset = 0;   //滑块条长度
+
+
 
   @Input()moveEmit = false  //滑动时要不要发送当前值
 
@@ -74,8 +75,8 @@ export class WySliderComponent implements OnInit,OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['sliderValue'] && !this.isDragging){
-      this.setValue(this.sliderValue)
+    if (changes['sliderValue']){
+      this.setValue(this.sliderValue,true)
     }
     if (changes['bufferValue']){
       this.bufferOffset = this.formatValue(this.bufferValue)
@@ -166,12 +167,12 @@ export class WySliderComponent implements OnInit,OnChanges {
     if (needCheck) {
       if (this.isDragging) { return; }
       this.value = this.formatValue(value);
-      this.updateTrackAndHandles();
       this.sliderValue = this.value
+      this.updateTrackAndHandles();
     } else if (!this.valuesEqual(this.value, value)) {
       this.value = this.formatValue(value);
-      this.updateTrackAndHandles();
       this.sliderValue = this.value
+      this.updateTrackAndHandles();
     }
 
   }

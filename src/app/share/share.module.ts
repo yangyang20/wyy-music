@@ -6,6 +6,9 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import {WyUiModule} from "./wy-ui/wy-ui.module";
 import {WyPlayerModule} from './wy-ui/wy-player/wy-player.module';
 import {NzRadioModule} from 'ng-zorro-antd/radio';
+import {NzButtonModule} from "ng-zorro-antd/button";
+import {NzTableModule} from "ng-zorro-antd/table";
+import {NzTagModule} from "ng-zorro-antd/tag";
 
 
 @NgModule({
@@ -17,7 +20,10 @@ import {NzRadioModule} from 'ng-zorro-antd/radio';
     NzIconModule,
     WyUiModule,
     WyPlayerModule,
-    NzRadioModule
+    NzRadioModule,
+    NzButtonModule,
+    NzTableModule,
+    NzTagModule,
   ],
   exports:[
     CommonModule,
@@ -26,7 +32,10 @@ import {NzRadioModule} from 'ng-zorro-antd/radio';
     NzIconModule,
     WyUiModule,
     WyPlayerModule,
-    NzRadioModule
+    NzRadioModule,
+    NzButtonModule,
+    NzTableModule,
+    NzTagModule,
   ]
 })
 export class ShareModule { }

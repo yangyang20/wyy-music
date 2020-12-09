@@ -27,6 +27,7 @@ export class SheetListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.orderValue = this.listParams.order
     this.getSheetList()
   }
 

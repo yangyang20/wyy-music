@@ -1,7 +1,14 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppStoreModule} from '../../../store';
-import {getCurrentIndex, getCurrentSong, getPlayList, getPlayMode, getSongList} from '../../../store/selectors/player.selectors';
+import {
+  getCurrentIndex,
+  getCurrentSong,
+  getPlayer,
+  getPlayList,
+  getPlayMode,
+  getSongList
+} from '../../../store/selectors/player.selectors';
 import {Song} from "../../../service/data-types/common.types";
 import {PlayMode} from "./player.type";
 import {SetCurrentIndex, SetPlayList, SetPlayMode, SetSongList} from '../../../store/actions/player.actions';
@@ -78,8 +85,9 @@ export class WyPlayerComponent implements OnInit {
   constructor(private store$:Store<AppStoreModule>,
               private batchActionsServe: BatchActionsService,
               private nzModelService:NzModalService) {
-    // @ts-ignore
-    const appStore$ = this.store$.pipe(select('player'));
+
+
+    const appStore$ = this.store$.pipe(select(getPlayer));
 
 
     const stateArr = [
@@ -244,7 +252,7 @@ export class WyPlayerComponent implements OnInit {
     const currentTime = this.duration * (value / 100);
     if (this.currentSong){
       this.audioEl!.currentTime = currentTime
-      console.log('当前播放时间',this.audioEl!.currentTime);
+      // console.log('当前播放时间',this.audioEl!.currentTime);
     }
   }
 
