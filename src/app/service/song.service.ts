@@ -17,20 +17,15 @@ export class SongService {
   getSongUrl(ids:string):Observable<SongUrl[]>{
     const params = {params:new HttpParams().set('id',ids)}
 
-    return this.http.get(this.url+'song/url',params)
-      // @ts-ignore
+    return this.http.get<{data:SongUrl[]}>(this.url+'song/url',params)
+
       .pipe(map((res:{data:SongUrl[]}) => res.data))
   }
 
-  //获取歌曲列表
+  //获取歌曲列表的播放url
   getSongList(song:Song|Song[]):Observable<Song[]>{
     const songArr = Array.isArray(song)?song.slice():[song]
     const songids = songArr.map(item=>item.id).join(',')
-    // return new Observable((observer) => {
-    //   this.getSongUrl(songids).subscribe(urls => {
-    //     observer.next(this.generateSongList(songArr, urls))
-    //   })
-    // })
     return this.getSongUrl(songids).pipe(map(urls=>this.generateSongList(songArr,urls)))
   }
 
@@ -48,6 +43,14 @@ export class SongService {
     return resurt
   }
 
+
+  //获取歌曲详情,多个id以,隔开
+  getSongDetails(ids:string):Observable<Song[]>{
+    const params = {params:new HttpParams().set('ids',ids)}
+    return this.http.get<{songs:Song[]}>(this.url+'song/detail',params).pipe(map((res:{songs:Song[]})=>res.songs))
+  }
+
+
   getLyric(id:number):Observable<Lyric>{
     const params = {params:new HttpParams().set('id',id.toString())}
     return this.http.get<WyLyricOriginal>(this.url + 'lyric',params).
@@ -58,7 +61,6 @@ export class SongService {
           tlyric: res.tlyric.lyric,
         };
       }else {
-        console.log(id);
         return {
           lyric: '',
           tlyric: '',
