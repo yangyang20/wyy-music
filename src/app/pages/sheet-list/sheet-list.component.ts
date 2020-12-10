@@ -14,16 +14,16 @@ export class SheetListComponent implements OnInit {
     order: 'hot',
     offset: 1,
     limit: 35
-  };
+  }
 
-  sheetList!:SheetList
-  playList:SongSheet[]=[]
+  sheetList!: SheetList
+  playList: SongSheet[] = []
 
-  orderValue:string=''
+  orderValue: string = ''
 
-  constructor(private route: ActivatedRoute,private sheetService:SheetService) {
-     const cat = this.route.snapshot.paramMap.get('cat');
-     this.listParams.cat = cat?cat:'全部'
+  constructor(private route: ActivatedRoute, private sheetService: SheetService) {
+    const cat = this.route.snapshot.paramMap.get('cat');
+    this.listParams.cat = cat ? cat : '全部'
   }
 
   ngOnInit(): void {
@@ -32,15 +32,17 @@ export class SheetListComponent implements OnInit {
   }
 
 
-  getSheetList(){
-    this.sheetService.getSheets(this.listParams).subscribe(sheetList=>{
+  getSheetList() {
+    this.sheetService.getSheets(this.listParams).subscribe(sheetList => {
       this.sheetList = sheetList
       this.playList = sheetList.playlists
-      this.playList.map(item=>item.picUrl=item.coverImgUrl)
+      this.playList.map(item => item.picUrl = item.coverImgUrl)
     })
   }
 
-  onPlaySheet(sheetId:number){
+  onPlaySheet(sheetId: number) {
 
   }
+
+
 }

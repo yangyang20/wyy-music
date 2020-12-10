@@ -47,7 +47,8 @@ export interface SongSheet {
   shareCount?:number,
   tags?:string[],
   userId?:number,
-  subscribed?:boolean
+  subscribed?:boolean,
+  description?:string,
 }
 
 export interface Creator {

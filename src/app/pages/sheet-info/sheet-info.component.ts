@@ -19,6 +19,17 @@ import {BatchActionsService} from "../../store/batch-actions.service";
 })
 export class SheetInfoComponent implements OnInit,OnDestroy {
 
+  description = {
+    short: '',
+    long: ''
+  };
+
+  controlDesc = {
+    isExpand: false,
+    label: '展开',
+    iconCls: 'down'
+  };
+
   sheetInfo:SongSheet = {
     id:0,
     name:'',
@@ -32,7 +43,8 @@ export class SheetInfoComponent implements OnInit,OnDestroy {
     shareCount:0,
     tags:[],
     userId:0,
-    subscribed:false
+    subscribed:false,
+    description:''
   }
 
   sheetId:number
@@ -69,17 +81,30 @@ export class SheetInfoComponent implements OnInit,OnDestroy {
   private getSheetInfo(id:number){
     this.sheetService.getSongSheetDetail(id).subscribe(songSheet=>{
       this.sheetInfo = songSheet
+      if (songSheet.description) {
+        this.changeDesc(songSheet.description);
+      }
     })
   }
 
 
-  onAddSong(song:Song[],isPlay:boolean=false){
+  onAddSong(song:Song,isPlay:boolean=false){
     this.songService.getSongList(song).subscribe(list=>{
       if (list.length) {
-        if (isPlay) {
-          // this.batchActionServe.selectPlayList({ list, index: 0 });
-        } else {
-          // this.batchActionServe.insertSong(list);
+        this.batchActionServe.insertSong(list[0], isPlay);
+      } else {
+
+      }
+    })
+  }
+
+  onAddSongs(songs:Song[],isPlay:boolean=false){
+    this.songService.getSongList(songs).subscribe(list=>{
+      if (list.length){
+        if (isPlay){
+          this.batchActionServe.selectPlayList({list,index:0})
+        } else{
+        this.batchActionServe.insertSongs(list)
         }
       }
     })
@@ -100,6 +125,35 @@ export class SheetInfoComponent implements OnInit,OnDestroy {
           this.currentIndex = -1;
         }
       });
+  }
+
+  toggleDesc() {
+    this.controlDesc.isExpand = !this.controlDesc.isExpand;
+    if (this.controlDesc.isExpand) {
+      this.controlDesc.label = '收起';
+      this.controlDesc.iconCls = 'up';
+    } else {
+      this.controlDesc.label = '展开';
+      this.controlDesc.iconCls = 'down';
+    }
+  }
+
+  private changeDesc(desc: string) {
+    if (desc.length < 99) {
+      this.description = {
+        short: this.replaceBr('<b>介绍：</b>' + desc),
+        long: ''
+      };
+    } else {
+      this.description = {
+        short: this.replaceBr('<b>介绍：</b>' + desc.slice(0, 99)) + '...',
+        long: this.replaceBr('<b>介绍：</b>' + desc)
+      };
+    }
+  }
+
+  private replaceBr(str: string): string {
+    return str.replace(/\n/g, '<br />');
   }
 
 

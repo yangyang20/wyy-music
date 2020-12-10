@@ -89,9 +89,9 @@ export class WyPlayerPanelComponent implements OnInit,OnChanges {
       //选中的元素
       const currentSongRef = songListRefs[this.currentIndex]
       //选中的元素距离上方或上层控件的位置
-      const offsetTop = currentSongRef.offsetTop;
+      const offsetTop = currentSongRef?.offsetTop;
       //
-      const offsetHeight = currentSongRef.offsetHeight;
+      const offsetHeight = currentSongRef?.offsetHeight;
       if (((offsetTop - Math.abs(this.scrollY)) > offsetHeight * 5) || (offsetTop < Math.abs(this.scrollY))) {
         this.wyScroll.first.scrollToElement(currentSongRef, speed, false, false);
       }
