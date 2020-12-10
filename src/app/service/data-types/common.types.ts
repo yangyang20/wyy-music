@@ -11,6 +11,11 @@ export interface HotTag {
   position:number,
 }
 
+//歌手详情
+export interface SingerDetail {
+  artist: Singer;
+  hotSongs: Song[];
+}
 
 
 
@@ -20,6 +25,7 @@ export interface Singer {
   name:string,
   picUrl:string,
   albumSize:number,
+  alias?:[]
 }
 
 
