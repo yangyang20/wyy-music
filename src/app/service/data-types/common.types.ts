@@ -25,7 +25,7 @@ export interface Singer {
   name:string,
   picUrl:string,
   albumSize:number,
-  alias?:[]
+  alias:string[]
 }
 
 
@@ -88,4 +88,12 @@ export interface SheetParams {
 export interface SheetList {
   playlists: SongSheet[];
   total: number;
+}
+
+
+//搜索
+export interface SearchResult {
+  artists?:Singer[],
+  playlists?:SongSheet[],
+  songs?:Song[],
 }

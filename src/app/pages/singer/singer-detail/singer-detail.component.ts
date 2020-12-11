@@ -35,7 +35,7 @@ export class SingerDetailComponent implements OnInit,OnDestroy {
 
   private currentSong:Song|undefined
 
-  private currentIndex=0
+  currentIndex=0
 
   private destroy$ = new Subject<void>()
 

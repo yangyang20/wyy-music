@@ -10,6 +10,7 @@
           </ul>
         </div>
         <div class="right">
+          <app-wy-search (onSearch)="onSearch($event)" ></app-wy-search>
           <div class="member">
             <div class="no-login" *ngIf="!user else logined">
               <ul nz-menu nzTheme="dark" nzMode="horizontal">
