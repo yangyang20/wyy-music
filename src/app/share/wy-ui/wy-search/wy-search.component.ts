@@ -11,7 +11,9 @@ import {
 } from '@angular/core';
 import {fromEvent} from "rxjs";
 import {debounceTime, distinctUntilChanged, pluck} from "rxjs/operators";
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+
+import {WySearchPanelComponent} from './wy-search-panel/wy-search-panel.component';
+import {SearchResult} from '../../../service/data-types/common.types';
 @Component({
   selector: 'app-wy-search',
   templateUrl: './wy-search.component.html',
@@ -21,15 +23,19 @@ export class WySearchComponent implements OnInit,AfterViewInit {
 
   @Input() customView: TemplateRef<any>|undefined
 
-  @Output()onSearch = new EventEmitter<string>()
-
   @ViewChild('nzInput',{static:false,read:ElementRef}) inputElement!:ElementRef
 
 
-  private overlayRef: OverlayRef|undefined;
+  //搜索结果的显示与隐藏
+  visible:boolean = true
 
-  constructor(private overlay: Overlay,
-              private viewContainerRef: ViewContainerRef,) { }
+  searchValue:string=''
+
+
+
+  constructor() {
+
+  }
 
   ngOnInit(): void {
   }
@@ -44,8 +50,8 @@ export class WySearchComponent implements OnInit,AfterViewInit {
       //  属性的值。如果属性无法解析，它会返回 `undefined`
       debounceTime(300), distinctUntilChanged(), pluck('target', 'value')
     ).subscribe(value => {
-      this.onSearch.emit(String(value))
-      this.toggleOverlayPanel(value)
+      this.searchValue = String(value)
+
     })
 
 
@@ -53,21 +59,6 @@ export class WySearchComponent implements OnInit,AfterViewInit {
 
 
 
- toggleOverlayPanel(data:any){
-    if (data){
-      this.showOverlayPanel();
-    }else {
-      this.hideOverlayPanel();
-    }
-  }
-
-  private showOverlayPanel(){
-
-  }
-
-  private hideOverlayPanel(){
-
-  }
 
   onFocus(){
 

@@ -5,7 +5,20 @@
 <ng-template #defaultView>
   <div class="search" #search>
     <nz-input-group nzSuffixIcon="search">
-      <input type="text" #nzInput nz-input placeholder="歌单/歌手/歌曲" (focus)="onFocus()" />
+      <input type="text" #nzInput nz-input
+             [nz-popover]="searchPanelRef"
+             placeholder="歌单/歌手/歌曲"
+             nzPopoverTrigger="click"
+             (focus)="onFocus()"
+             [(nzPopoverVisible)]="visible"
+             [nzPopoverOverlayStyle]="{}"
+      />
     </nz-input-group>
   </div>
 </ng-template>
+
+
+<ng-template #searchPanelRef>
+  <app-wy-search-panel [keywords]="searchValue"></app-wy-search-panel>
+</ng-template>
+

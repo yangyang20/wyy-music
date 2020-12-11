@@ -35,9 +35,7 @@ export class AppComponent {
 
   //搜索
   onSearch(searchVal:string){
-      this.searchService.getSearch(searchVal).subscribe(searchResult=>{
-        console.log(searchResult);
-      })
+
   }
 
 }

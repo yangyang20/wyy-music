@@ -6,6 +6,7 @@ import {NzTagModule} from "ng-zorro-antd/tag";
 import {NzInputModule} from "ng-zorro-antd/input";
 import {CommonModule} from "@angular/common";
 import {NzOverlayModule} from "ng-zorro-antd/core/overlay";
+import {NzPopoverModule} from 'ng-zorro-antd/popover';
 
 
 
@@ -20,6 +21,7 @@ import {NzOverlayModule} from "ng-zorro-antd/core/overlay";
     NzTagModule,
     NzInputModule,
     NzOverlayModule,
+    NzPopoverModule ,
   ],
   exports:[
     NzRadioModule,
@@ -29,6 +31,7 @@ import {NzOverlayModule} from "ng-zorro-antd/core/overlay";
     NzInputModule,
     CommonModule,
     NzOverlayModule,
+    NzPopoverModule
   ]
 })
 export class AppCommonModule { }
