@@ -45,16 +45,16 @@ export class SingerDetailComponent implements OnInit,OnDestroy {
               private batchActionsService:BatchActionsService,
               private songService:SongService,
               private singerService:SingerService) {
-    const id = this.activateRoute.snapshot.paramMap.get('id')
-    this.singerId = Number(id)
   }
 
-
-
   ngOnInit(): void {
-    this.getSingerDetail()
-    this.getSingerSimi()
-    this.listenCurrent()
+    this.activateRoute.params.subscribe(params=>{
+      this.singerId = params.id
+      this.getSingerDetail()
+      this.getSingerSimi()
+      this.listenCurrent()
+    })
+
   }
 
 

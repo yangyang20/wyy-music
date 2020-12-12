@@ -1,6 +1,17 @@
-import {Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef, EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import {SearchResult} from '../../../../service/data-types/common.types';
 import {SearchService} from '../../../../service/search.service';
+import { Router} from "@angular/router";
 
 @Component({
   selector: 'app-wy-search-panel',
@@ -12,10 +23,13 @@ export class WySearchPanelComponent implements OnInit,OnChanges {
 
   @Input()keywords:string=''
 
-  constructor(private searchService:SearchService) { }
+  @Output()changeVisible = new EventEmitter<boolean>()
+
+  constructor(private searchService:SearchService,
+              private router:Router) { }
 
   ngOnInit(): void {
-    // this.getSearch()
+
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['keywords']){
@@ -27,18 +41,31 @@ export class WySearchPanelComponent implements OnInit,OnChanges {
   private getSearch(){
     if (this.keywords){
       this.searchService.getSearch(this.keywords).subscribe(searchResult=>{
-        this.searchResult = searchResult
+        this.searchResult = this.highlightkeywords(this.keywords,searchResult)
       })
     }
-
   }
 
-  toInfo(data:(number|string)[]){
-    console.log(data);
+
+  private highlightkeywords(keywords:string,result:SearchResult):SearchResult{
+    const reg = new RegExp(keywords,'ig');
+    ['artists','playlists','songs'].forEach(type=>{
+      // @ts-ignore
+      if (result[type]){
+        // @ts-ignore
+        result[type].forEach(item=>{
+          item.name = item.name.replace(reg,'<span class="highlight">$&</span>')
+        })
+      }
+    })
+    return  result
   }
 
-  test222(){
-    console.log(123);
+  toInfo(path:[string,number]){
+    this.changeVisible.emit(false)
+    this.router.navigate(path);
   }
+
+
 
 }

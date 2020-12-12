@@ -33,9 +33,6 @@ export class AppComponent {
   }
 
 
-  //搜索
-  onSearch(searchVal:string){
 
-  }
 
 }

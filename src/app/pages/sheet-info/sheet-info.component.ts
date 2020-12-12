@@ -47,7 +47,7 @@ export class SheetInfoComponent implements OnInit,OnDestroy {
     description:''
   }
 
-  sheetId:number
+  sheetId:number = 0
 
   currentIndex:number=-1
 
@@ -68,14 +68,16 @@ export class SheetInfoComponent implements OnInit,OnDestroy {
               private store$:Store<AppStoreModule>,
               private songService:SongService,
               private batchActionServe:BatchActionsService) {
-    const id = this.activateRoute.snapshot.paramMap.get('id');
-    this.sheetId = Number(id)
+
 
   }
 
   ngOnInit(): void {
-    this.getSheetInfo(this.sheetId)
-    this.listenCurrent()
+    this.activateRoute.params.subscribe(params=>{
+      this.sheetId = params.id
+      this.getSheetInfo(this.sheetId)
+      this.listenCurrent()
+    })
   }
 
   private getSheetInfo(id:number){

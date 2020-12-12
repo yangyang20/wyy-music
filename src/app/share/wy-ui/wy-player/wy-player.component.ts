@@ -16,6 +16,7 @@ import {findIndex, shuffle} from "../../../utils/array";
 import {BatchActionsService} from '../../../store/batch-actions.service';
 import {NzMessageModule} from 'ng-zorro-antd/message';
 import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 
 const modeTypes: PlayMode[] = [{
@@ -41,12 +42,24 @@ enum TipTitles {
 @Component({
   selector: 'app-wy-player',
   templateUrl: './wy-player.component.html',
-  styleUrls: ['./wy-player.component.less']
+  styleUrls: ['./wy-player.component.less'],
+  animations:[trigger('showHide',[
+    state('show',style({bottom:0})),
+    state('hide',style({bottom:-65})),
+    transition('show=>hide',[animate('0.3s')]),
+    transition('hide=>show',[animate('0.1s')]),
+  ])]
 })
 export class WyPlayerComponent implements OnInit {
 
   //todo 拖动播放不顺畅
 
+  //控制播放器的显示与隐藏
+  playerShow = 'hide'
+  //播放器锁定
+  isLocked=false
+  // 是否正在动画
+  animating = false;
 
   songList:Song[]=[]
   playList:Song[]=[]
@@ -307,4 +320,13 @@ export class WyPlayerComponent implements OnInit {
     })
 
   }
+
+  //切换播放器的显示与隐藏
+  togglePlayer(type:'hide'|'show'){
+    if (!this.isLocked && !this.animating){
+      this.playerShow = type
+    }
+  }
+
+
 }

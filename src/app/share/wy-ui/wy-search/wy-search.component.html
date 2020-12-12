@@ -8,10 +8,10 @@
       <input type="text" #nzInput nz-input
              [nz-popover]="searchPanelRef"
              placeholder="歌单/歌手/歌曲"
-             nzPopoverTrigger="click"
+             [nzPopoverTrigger]="null"
              (focus)="onFocus()"
              [(nzPopoverVisible)]="visible"
-             [nzPopoverOverlayStyle]="{}"
+             [nzPopoverOverlayStyle]="nzPopoverStyle"
       />
     </nz-input-group>
   </div>
@@ -19,6 +19,6 @@
 
 
 <ng-template #searchPanelRef>
-  <app-wy-search-panel [keywords]="searchValue"></app-wy-search-panel>
+  <app-wy-search-panel [keywords]="searchValue" (changeVisible)="toggleVisible($event)"></app-wy-search-panel>
 </ng-template>
 

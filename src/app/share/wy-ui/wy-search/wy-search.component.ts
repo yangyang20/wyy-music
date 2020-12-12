@@ -27,14 +27,20 @@ export class WySearchComponent implements OnInit,AfterViewInit {
 
 
   //搜索结果的显示与隐藏
-  visible:boolean = true
+  visible:boolean = false
 
   searchValue:string=''
 
 
+  @Input() nzPopoverStyle={
+    // border: '1px solid #bebebe',
+    borderRadius: '4px',
+    background: '@white-color',
+    // boxShadow: '0 4px 7px #555',
+    textShadow: '0 1px 0 rgba(255, 255, 255, 0.9)'
+  }
 
   constructor() {
-
   }
 
   ngOnInit(): void {
@@ -51,13 +57,19 @@ export class WySearchComponent implements OnInit,AfterViewInit {
       debounceTime(300), distinctUntilChanged(), pluck('target', 'value')
     ).subscribe(value => {
       this.searchValue = String(value)
-
+      if (this.searchValue){
+        this.toggleVisible(true)
+      }else{
+        this.toggleVisible(false)
+      }
     })
-
-
   }
 
-
+  toggleVisible(isShow:boolean=!this.visible){
+    if (this.visible!==isShow){
+      this.visible = isShow
+    }
+  }
 
 
   onFocus(){

@@ -44,14 +44,15 @@ export class SongInfoComponent implements OnInit {
               private songService:SongService,
               private store$:Store<AppStoreModule>,
               private batchActionsService:BatchActionsService) {
-    const id = this.activateRoute.snapshot.paramMap.get('id')
-    this.songId=Number(id)
   }
 
   ngOnInit(): void {
-    this.getSongDetail(this.songId)
-    this.getSongLyric(this.songId)
-    this.listenCurrent();
+    this.activateRoute.params.subscribe(params=>{
+      this.songId = params.id
+      this.getSongDetail(this.songId)
+      this.getSongLyric(this.songId)
+      this.listenCurrent();
+    })
   }
 
 
