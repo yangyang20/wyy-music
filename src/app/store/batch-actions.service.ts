@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AppStoreModule} from './index';
-import {PlayState} from './reducers/player.reducer';
-import {SetCurrentIndex, SetPlayList, SetSongList} from './actions/player.actions';
+import {CurrentActions, PlayState} from './reducers/player.reducer';
+import {SetCurrentAction, SetCurrentIndex, SetPlayList, SetSongList} from './actions/player.actions';
 import {select, Store} from '@ngrx/store';
 import {getPlayer} from './selectors/player.selectors';
 import {Song} from "../service/data-types/common.types";
@@ -31,6 +31,7 @@ export class BatchActionsService {
     this.store$.dispatch(SetSongList({songList}))
     this.store$.dispatch(SetPlayList({playList}))
     this.store$.dispatch(SetCurrentIndex({currentIndex}))
+    this.store$.dispatch(SetCurrentAction({currentAction:CurrentActions.Delete}))
   }
 
   //清空歌曲
@@ -38,6 +39,7 @@ export class BatchActionsService {
     this.store$.dispatch(SetSongList({songList:[]}))
     this.store$.dispatch(SetPlayList({playList:[]}))
     this.store$.dispatch(SetCurrentIndex({currentIndex:-1}))
+    this.store$.dispatch(SetCurrentAction({currentAction:CurrentActions.Clear}))
   }
 
   //插入歌曲
@@ -61,7 +63,11 @@ export class BatchActionsService {
     this.store$.dispatch(SetSongList({songList}))
     if (currentIndex !==this.playerState.currentIndex){
       this.store$.dispatch(SetCurrentIndex({currentIndex}))
+      this.store$.dispatch(SetCurrentAction({currentAction:CurrentActions.Play}))
+    }else{
+      this.store$.dispatch(SetCurrentAction({currentAction:CurrentActions.Add}))
     }
+
   }
 
 
@@ -79,6 +85,7 @@ export class BatchActionsService {
       playList = playList.concat(songPlayList);
       this.store$.dispatch(SetSongList({ songList }));
       this.store$.dispatch(SetPlayList({ playList }));
+      this.store$.dispatch(SetCurrentAction({currentAction:CurrentActions.Add}))
     }
   }
 
@@ -94,5 +101,6 @@ export class BatchActionsService {
     }
     this.store$.dispatch(SetPlayList({ playList: trueList }));
     this.store$.dispatch(SetCurrentIndex({ currentIndex: trueIndex }));
+    this.store$.dispatch(SetCurrentAction({currentAction:CurrentActions.Play}))
   }
 }

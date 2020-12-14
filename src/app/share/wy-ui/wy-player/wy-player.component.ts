@@ -2,6 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppStoreModule} from '../../../store';
 import {
+  getCurrentAction,
   getCurrentIndex,
   getCurrentSong,
   getPlayer,
@@ -11,12 +12,12 @@ import {
 } from '../../../store/selectors/player.selectors';
 import {Song} from "../../../service/data-types/common.types";
 import {PlayMode} from "./player.type";
-import {SetCurrentIndex, SetPlayList, SetPlayMode, SetSongList} from '../../../store/actions/player.actions';
+import {SetCurrentIndex, SetPlayList, SetPlayMode} from '../../../store/actions/player.actions';
 import {findIndex, shuffle} from "../../../utils/array";
 import {BatchActionsService} from '../../../store/batch-actions.service';
-import {NzMessageModule} from 'ng-zorro-antd/message';
-import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
-import {animate, state, style, transition, trigger} from "@angular/animations";
+import {NzModalService} from 'ng-zorro-antd/modal';
+import {animate, state, style, transition, trigger,AnimationEvent} from "@angular/animations";
+import {CurrentActions} from "../../../store/reducers/player.reducer";
 
 
 const modeTypes: PlayMode[] = [{
@@ -33,7 +34,10 @@ const modeTypes: PlayMode[] = [{
 
 enum TipTitles {
   Add = '已添加到列表',
-  Play = '已开始播放'
+  Play = '已开始播放',
+  Delete='',
+  Clear ='',
+  Other=''
 }
 
 
@@ -89,7 +93,6 @@ export class WyPlayerComponent implements OnInit {
   modeCount:number=0
 
 
-  //
 
 
   @ViewChild('audio',{static:true,read:ElementRef})private audio: ElementRef | undefined
@@ -121,6 +124,10 @@ export class WyPlayerComponent implements OnInit {
         cb:(mode:PlayMode)=>this.watchPlayMode(mode)
       },
       {
+        type:getCurrentAction,
+        cb:(currentAction:CurrentActions)=>this.watchCurrentAction(currentAction)
+      },
+      {
         type:getCurrentSong,
         cb:(song:Song)=>this.watchCurrentSong(song)
       },
@@ -148,6 +155,13 @@ export class WyPlayerComponent implements OnInit {
   //歌曲播放面板是否显示
   panelShow:boolean = false
 
+
+  //当前播放提示文字
+  controlTooltip = {
+    title: '',
+    show: false
+  };
+
   ngOnInit(): void {
   }
 
@@ -163,8 +177,6 @@ export class WyPlayerComponent implements OnInit {
   private watchCurrentIndex(currentIndex:number){
     this.currentIndex = currentIndex
   }
-
-
   private watchPlayMode(playMode:PlayMode){
     this.playMode = playMode
     //模式改变要改变的歌曲的播放顺序
@@ -187,6 +199,41 @@ export class WyPlayerComponent implements OnInit {
       this.currentSong = song
     }
   }
+
+
+  private watchCurrentAction(currentAction:CurrentActions){
+    // @ts-ignore
+    const title = TipTitles[CurrentActions[currentAction]];
+    if (title) {
+      this.controlTooltip.title = title;
+      if (this.playerShow === 'hide') {
+        this.togglePlayer('show');
+      } else {
+        this.showToolTip();
+      }
+    }
+  }
+
+  private showToolTip(){
+    this.controlTooltip.show = true
+  }
+
+  onAnimateDone(event: AnimationEvent) {
+    this.animating = false;
+    if (event.toState === 'show' && this.controlTooltip.title) {
+      this.showToolTip();
+    }
+  }
+
+  // 控制列表面板
+  toggleListPanel() {
+    // if (this.songList.length) {
+    //   this.togglePanel('showPanel');
+    // }
+  }
+
+
+
 
 
   onPlay(){
@@ -301,8 +348,8 @@ export class WyPlayerComponent implements OnInit {
   }
 
   //切换播放面板的显示与隐藏
-  togglePanel(){
-    this.panelShow = !this.panelShow
+  togglePanel(isShow:boolean=!this.panelShow){
+    this.panelShow = isShow
   }
 
   //删除歌曲
