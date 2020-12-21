@@ -6,14 +6,19 @@ import {select, Store} from '@ngrx/store';
 import {getPlayer} from './selectors/player.selectors';
 import {Song} from "../service/data-types/common.types";
 import {findIndex, shuffle} from '../utils/array';
+import {MemberState, ModalTypes} from "./reducers/member.reducer";
+import {getMember} from "./selectors/member.selectors";
+import {SetModalType, SetModalVisible} from "./actions/member.action";
 
 @Injectable({
   providedIn: AppStoreModule
 })
 export class BatchActionsService {
   private playerState!:PlayState
+  private memberState!:MemberState
   constructor(private store$: Store<AppStoreModule>) {
     this.store$.pipe(select(getPlayer)).subscribe(res => this.playerState = res);
+    this.store$.pipe(select(getMember)).subscribe(res=>this.memberState = res)
   }
 
 
@@ -102,5 +107,12 @@ export class BatchActionsService {
     this.store$.dispatch(SetPlayList({ playList: trueList }));
     this.store$.dispatch(SetCurrentIndex({ currentIndex: trueIndex }));
     this.store$.dispatch(SetCurrentAction({currentAction:CurrentActions.Play}))
+  }
+
+
+
+  controlModal(modalVisible:boolean=true,modalType:ModalTypes= ModalTypes.Default){
+    this.store$.dispatch(SetModalType({modalType}))
+    this.store$.dispatch(SetModalVisible({modalVisible}))
   }
 }

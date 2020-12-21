@@ -7,6 +7,7 @@ import {SheetService} from '../../service/sheet.service';
 import {Store} from '@ngrx/store';
 import {AppStoreModule} from '../../store';
 import {SetCurrentIndex, SetPlayList, SetSongList} from '../../store/actions/player.actions';
+import {BatchActionsService} from "../../store/batch-actions.service";
 
 @Component({
   selector: 'app-home',
@@ -27,7 +28,8 @@ export class HomeComponent implements OnInit {
   constructor(private homeService:HomeService,
               private singerService:SingerService,
               private sheetService:SheetService,
-              private store$:Store<AppStoreModule>
+              private store$:Store<AppStoreModule>,
+              private batchActionsService:BatchActionsService,
               ) {}
 
 
@@ -79,5 +81,9 @@ export class HomeComponent implements OnInit {
       this.store$.dispatch(SetPlayList({playList:list}))
       this.store$.dispatch(SetCurrentIndex({currentIndex:0}))
     })
+  }
+
+  openModal(){
+    this.batchActionsService.controlModal()
   }
 }
