@@ -8,6 +8,7 @@ import {Store} from '@ngrx/store';
 import {AppStoreModule} from '../../store';
 import {SetCurrentIndex, SetPlayList, SetSongList} from '../../store/actions/player.actions';
 import {BatchActionsService} from "../../store/batch-actions.service";
+import {ModalTypes} from "../../store/reducers/member.reducer";
 
 @Component({
   selector: 'app-home',
@@ -84,6 +85,6 @@ export class HomeComponent implements OnInit {
   }
 
   openModal(){
-    this.batchActionsService.controlModal()
+    this.batchActionsService.controlModal(true,ModalTypes.Default)
   }
 }

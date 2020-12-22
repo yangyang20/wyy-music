@@ -8,7 +8,8 @@ import {CommonModule} from "@angular/common";
 import {NzOverlayModule} from "ng-zorro-antd/core/overlay";
 import {NzPopoverModule} from 'ng-zorro-antd/popover';
 import {NzToolTipModule} from "ng-zorro-antd/tooltip";
-
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 
@@ -23,7 +24,9 @@ import {NzToolTipModule} from "ng-zorro-antd/tooltip";
     NzInputModule,
     NzOverlayModule,
     NzPopoverModule ,
-    NzToolTipModule
+    NzToolTipModule,
+    DragDropModule,
+    ReactiveFormsModule,
   ],
   exports:[
     NzRadioModule,
@@ -34,7 +37,9 @@ import {NzToolTipModule} from "ng-zorro-antd/tooltip";
     CommonModule,
     NzOverlayModule,
     NzPopoverModule,
-    NzToolTipModule
+    NzToolTipModule,
+    DragDropModule,
+    ReactiveFormsModule
   ]
 })
 export class AppCommonModule { }

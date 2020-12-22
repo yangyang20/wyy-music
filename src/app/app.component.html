@@ -20,12 +20,12 @@
                     <i nz-icon type="down" nzTheme="outline"></i>
                   </div>
                   <ul>
-                    <li nz-menu-item >
-                      <i nz-icon type="mobile" nzTheme="outline"></i>
+                    <li nz-menu-item (click)="openModal('loginByPhone')">
+                      <i nz-icon type="mobile" nzTheme="outline" ></i>
                       手机登陆
                     </li>
-                    <li nz-menu-item >
-                      <i nz-icon type="user-add" nzTheme="outline"></i>
+                    <li nz-menu-item (click)="openModal('register')">
+                      <i nz-icon type="user-add" nzTheme="outline" ></i>
                       注册
                     </li>
                   </ul>
@@ -70,5 +70,7 @@
 
 <app-wy-player></app-wy-player>
 <app-wy-layer-modal>
-  <app-wy-layer-default></app-wy-layer-default>
+  <app-wy-layer-login name="login"></app-wy-layer-login>
+  <app-wy-layer-register name="register"></app-wy-layer-register>
+  <app-wy-layer-default (onChangeModalType)="onChangeModalType($event)"></app-wy-layer-default>
 </app-wy-layer-modal>

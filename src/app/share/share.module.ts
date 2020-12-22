@@ -17,7 +17,7 @@ import {CommonModule} from "@angular/common";
     NzIconModule,
     WyUiModule,
     WyPlayerModule,
-    AppCommonModule
+    AppCommonModule,
   ],
   exports:[
     AppCommonModule,

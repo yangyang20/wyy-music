@@ -15,7 +15,7 @@ import {ModalTypes} from "../../../../store/reducers/member.reducer";
 import { Overlay, OverlayRef, OverlayKeyboardDispatcher, BlockScrollStrategy, OverlayContainer } from '@angular/cdk/overlay';
 import {BatchActionsService} from '../../../../store/batch-actions.service';
 import {getHideDomSize, keepCenter} from '../../../../utils/domCalculation';
-import {DOCUMENT} from '@angular/common';
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 
 
@@ -23,12 +23,17 @@ import {DOCUMENT} from '@angular/common';
   selector: 'app-wy-layer-modal',
   templateUrl: './wy-layer-modal.component.html',
   styleUrls: ['./wy-layer-modal.component.less'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
+  animations:[trigger('showHide',[
+    state('show',style({transform: 'scale(1)',opacity:1})),
+    state('hide',style({transform:'scale(0)',opacity:0})),
+    transition('show<=>hide',animate('0.1s'))
+  ])]
 })
 export class WyLayerModalComponent implements OnInit ,AfterViewInit {
 
   //显示控制
-  showModal:boolean=false
+  showModal = 'hide'
   visible:boolean=false
   currentModalType:ModalTypes=ModalTypes.Default
   //弹窗时的滚轮控制
@@ -36,6 +41,7 @@ export class WyLayerModalComponent implements OnInit ,AfterViewInit {
 
   private overlayRef: OverlayRef|undefined;
 
+  private overlayContainerEl:HTMLElement|undefined
 
   private resizeHandle!: () => void
   @ViewChild('modalContainer',{static:true}) modalRef!:ElementRef
@@ -46,7 +52,8 @@ export class WyLayerModalComponent implements OnInit ,AfterViewInit {
               private overlayKeyboardDispatcher:OverlayKeyboardDispatcher,
               private cdr:ChangeDetectorRef,
               private batchActionsService:BatchActionsService,
-              private rd:Renderer2) {
+              private rd:Renderer2,
+              private overlayContainerSever:OverlayContainer) {
     const appStore = this.store$.pipe(select(getMember))
     appStore.pipe(select(getModalVisible)).subscribe(visib=>this.watchModalVisible(visib))
     appStore.pipe(select(getModalType)).subscribe(type=>this.watchModalType(type))
@@ -54,6 +61,7 @@ export class WyLayerModalComponent implements OnInit ,AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.overlayContainerEl = this.overlayContainerSever.getContainerElement()
     this.listenResizeToCenter()
   }
 
@@ -99,19 +107,29 @@ export class WyLayerModalComponent implements OnInit ,AfterViewInit {
   }
 
   private handleVisibleChange(visible:boolean){
-    this.showModal = visible
+
     if (visible){
+      this.showModal = 'show'
       this.listenResizeToCenter()
       this.blockScrollStrategy.enable()
+      this.changePointerEvents('auto')
       this.overlayKeyboardDispatcher.add(this.overlayRef!)
     }else{
+      this.showModal = 'hide'
       this.resizeHandle()
       this.blockScrollStrategy.disable()
+      this.changePointerEvents('none')
       this.overlayKeyboardDispatcher.remove(this.overlayRef!)
     }
     this.cdr.markForCheck()
   }
 
+
+  private changePointerEvents(type:'none'|'auto'){
+    if (this.overlayContainerEl){
+      this.overlayContainerEl.style.pointerEvents = type
+    }
+  }
 
   hide(){
     this.batchActionsService.controlModal(false)

@@ -111,8 +111,10 @@ export class BatchActionsService {
 
 
   //弹窗显示和关闭
-  controlModal(modalVisible:boolean=true,modalType:ModalTypes= ModalTypes.Default){
-    this.store$.dispatch(SetModalType({modalType}))
+  controlModal(modalVisible:boolean=true,modalType?:ModalTypes){
+    if (modalType){
+      this.store$.dispatch(SetModalType({modalType}))
+    }
     this.store$.dispatch(SetModalVisible({modalVisible}))
   }
 }
