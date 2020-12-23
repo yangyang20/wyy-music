@@ -9,6 +9,8 @@ import {AppStoreModule} from "./store";
 import {SetModalType} from "./store/actions/member.action";
 import {BatchActionsService} from "./store/batch-actions.service";
 import {MemberService} from "./service/member.service";
+import {NzMessageService} from 'ng-zorro-antd/message';
+
 
 
 @Component({
@@ -38,7 +40,8 @@ export class AppComponent {
               private searchService:SearchService,
               private store$:Store<AppStoreModule>,
               private batchActionsService:BatchActionsService,
-              private memberService:MemberService) {
+              private memberService:MemberService,
+              private messageServe:NzMessageService) {
   }
 
 
@@ -59,6 +62,25 @@ export class AppComponent {
 
 
   onLogin(loginParams:LoginParams){
-    this.memberService
+    this.memberService.login(loginParams).subscribe(res=>{
+      if (res.code ==200){
+        console.log(res);
+        this.user = res.profile
+        this.batchActionsService.controlModal(false)
+        // window['localStorage']
+        localStorage.setItem('user_id',String(this.user!.profile.userId))
+        this.alertMessage('success','登录成功')
+      }else {
+        this.alertMessage('error',res.msg|| '登录失败')
+      }
+    },error => {
+      console.log(error);
+      this.alertMessage('error',error.msg|| '登录失败')
+    })
+  }
+
+
+  private alertMessage(type: string, msg: string) {
+    this.messageServe.create(type, msg);
   }
 }

@@ -33,3 +33,10 @@ export interface LoginParams {
   password: string;
   remember: boolean;
 }
+
+
+export interface LoginRes {
+  code:number,
+  msg:string,
+  profile?:User
+}
