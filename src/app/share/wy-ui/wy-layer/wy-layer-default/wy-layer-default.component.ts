@@ -11,8 +11,8 @@ import {ModalTypes} from "../../../../store/reducers/member.reducer";
             <img src="../../../../../assets/images/platform.png" />
           </div>
           <div class="methods">
-            <button nz-button nzType="primary" nzSize="large" nzBlock (click)="onChangeModalType.emit('loginByPhone')">手机号登陆</button>
-            <button nz-button nzSize="large" nzBlock (click)="onChangeModalType.emit('register')">注册</button>
+            <button nz-button nzType="primary" nzSize="large" nzBlock (click)="changeModalTypeEmit('loginByPhone')">手机号登陆</button>
+            <button nz-button nzSize="large" nzBlock (click)="changeModalTypeEmit('register')">注册</button>
           </div>
         </div>
       </div>
@@ -24,11 +24,17 @@ import {ModalTypes} from "../../../../store/reducers/member.reducer";
 export class WyLayerDefaultComponent implements OnInit {
 
 
-  @Output() onChangeModalType = new EventEmitter<string | void>()
+  @Output() onChangeModalType = new EventEmitter<ModalTypes>()
   constructor() { }
 
   ngOnInit(): void {
   }
 
-
+  changeModalTypeEmit(modalType:'loginByPhone'|'register'){
+    if (modalType ==='loginByPhone'){
+      this.onChangeModalType.emit(ModalTypes.LoginByPhone)
+    }else if (modalType === 'register'){
+      this.onChangeModalType.emit(ModalTypes.Register)
+    }
+  }
 }

@@ -26,3 +26,10 @@ export interface User {
     eventCount: number;
   };
 }
+
+
+export interface LoginParams {
+  phone: string;
+  password: string;
+  remember: boolean;
+}

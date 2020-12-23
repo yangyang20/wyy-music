@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {User} from './service/data-types/member.type';
+import {LoginParams, User} from './service/data-types/member.type';
 import {Observable} from "rxjs";
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {SearchService} from "./service/search.service";
@@ -8,6 +8,7 @@ import {Store} from "@ngrx/store";
 import {AppStoreModule} from "./store";
 import {SetModalType} from "./store/actions/member.action";
 import {BatchActionsService} from "./store/batch-actions.service";
+import {MemberService} from "./service/member.service";
 
 
 @Component({
@@ -36,7 +37,8 @@ export class AppComponent {
               private router:Router,
               private searchService:SearchService,
               private store$:Store<AppStoreModule>,
-              private batchActionsService:BatchActionsService) {
+              private batchActionsService:BatchActionsService,
+              private memberService:MemberService) {
   }
 
 
@@ -52,6 +54,11 @@ export class AppComponent {
     }else if (modalType === 'register'){
       this.batchActionsService.controlModal(true,ModalTypes.Register)
     }
+  }
 
+
+
+  onLogin(loginParams:LoginParams){
+    this.memberService
   }
 }

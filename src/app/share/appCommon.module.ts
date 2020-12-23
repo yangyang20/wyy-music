@@ -9,7 +9,14 @@ import {NzOverlayModule} from "ng-zorro-antd/core/overlay";
 import {NzPopoverModule} from 'ng-zorro-antd/popover';
 import {NzToolTipModule} from "ng-zorro-antd/tooltip";
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {NzCheckboxModule} from "ng-zorro-antd/checkbox";
+import {NzSpinModule} from "ng-zorro-antd/spin";
+import {NzIconModule} from "ng-zorro-antd/icon";
+import {NzGridModule} from "ng-zorro-antd/grid";
+import {NzFormModule} from "ng-zorro-antd/form";
+import {NzListModule} from "ng-zorro-antd/list";
+import {NzAlertModule} from "ng-zorro-antd/alert";
 
 
 
@@ -27,6 +34,14 @@ import {ReactiveFormsModule} from "@angular/forms";
     NzToolTipModule,
     DragDropModule,
     ReactiveFormsModule,
+    NzCheckboxModule,
+    NzSpinModule,
+    NzIconModule,
+    NzGridModule,
+    FormsModule,
+    NzFormModule,
+    NzAlertModule,
+    NzListModule,
   ],
   exports:[
     NzRadioModule,
@@ -39,7 +54,15 @@ import {ReactiveFormsModule} from "@angular/forms";
     NzPopoverModule,
     NzToolTipModule,
     DragDropModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NzCheckboxModule,
+    NzSpinModule,
+    NzIconModule,
+    NzGridModule,
+    FormsModule,
+    NzFormModule,
+    NzAlertModule,
+    NzListModule,
   ]
 })
 export class AppCommonModule { }

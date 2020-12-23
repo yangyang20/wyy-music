@@ -8,11 +8,13 @@ import { WyLayerRegisterComponent } from './wy-layer-register/wy-layer-register.
 
 
 
+
 @NgModule({
   declarations: [WyLayerModalComponent, WyLayerDefaultComponent, WyLayerLoginComponent, WyLayerRegisterComponent],
   imports: [
     CommonModule,
     AppCommonModule,
+
   ],
   exports: [
     WyLayerModalComponent,
