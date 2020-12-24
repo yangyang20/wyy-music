@@ -53,3 +53,7 @@ export interface Signin {
   point?: number;
   msg?: string;
 }
+
+export interface Interface {
+  
+}
