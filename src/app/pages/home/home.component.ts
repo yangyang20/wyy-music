@@ -4,11 +4,16 @@ import {Banner, HotTag, Singer, SongSheet} from '../../service/data-types/common
 import {NzCarouselComponent} from "ng-zorro-antd/carousel";
 import {SingerService} from '../../service/singer.service';
 import {SheetService} from '../../service/sheet.service';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppStoreModule} from '../../store';
 import {SetCurrentIndex, SetPlayList, SetSongList} from '../../store/actions/player.actions';
 import {BatchActionsService} from "../../store/batch-actions.service";
 import {ModalTypes} from "../../store/reducers/member.reducer";
+import {User} from "../../service/data-types/member.type";
+import {SetUserID} from "../../store/actions/member.action";
+import {StorageService} from "../../service/storage.service";
+import {MemberService} from "../../service/member.service";
+import {getMember, getUserId} from "../../store/selectors/member.selectors";
 
 @Component({
   selector: 'app-home',
@@ -23,7 +28,7 @@ export class HomeComponent implements OnInit {
   songSheet:SongSheet[] = []
   singer:Singer[] = []
 
-
+  user?:User
   @ViewChild(NzCarouselComponent,{ static:true }) private nzCarousel!: NzCarouselComponent
 
   constructor(private homeService:HomeService,
@@ -31,7 +36,26 @@ export class HomeComponent implements OnInit {
               private sheetService:SheetService,
               private store$:Store<AppStoreModule>,
               private batchActionsService:BatchActionsService,
-              ) {}
+              private storageService:StorageService,
+              private memberService:MemberService,
+              ) {
+    //这里需要使用监听器才能实时同步
+    this.store$.pipe(select(getMember),select(getUserId)).subscribe(userId=>{
+      // const userId = this.storageService.getStorage('user_id')
+      if (userId){
+        this.store$.dispatch(SetUserID({userId}))
+        const user = this.storageService.getStorage('user_info')
+        if (user){
+          this.user = JSON.parse(user)
+        }else{
+          this.getUserDetail(userId)
+        }
+      }else {
+        this.user = undefined
+      }
+    })
+
+  }
 
 
   getBanners(){
@@ -86,5 +110,12 @@ export class HomeComponent implements OnInit {
 
   openModal(){
     this.batchActionsService.controlModal(true,ModalTypes.Default)
+  }
+
+  private getUserDetail(uid:number){
+    this.memberService.getUserDetail(uid).subscribe(user=>{
+      this.user = user
+      this.storageService.setStorage({key:'user_info',value:JSON.stringify(user)})
+    })
   }
 }

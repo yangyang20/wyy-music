@@ -8,7 +8,8 @@ import {Song} from "../service/data-types/common.types";
 import {findIndex, shuffle} from '../utils/array';
 import {MemberState, ModalTypes} from "./reducers/member.reducer";
 import {getMember} from "./selectors/member.selectors";
-import {SetModalType, SetModalVisible} from "./actions/member.action";
+import {SetModalType, SetModalVisible, SetUserID} from "./actions/member.action";
+import {StorageService} from "../service/storage.service";
 
 @Injectable({
   providedIn: AppStoreModule
@@ -16,7 +17,8 @@ import {SetModalType, SetModalVisible} from "./actions/member.action";
 export class BatchActionsService {
   private playerState!:PlayState
   private memberState!:MemberState
-  constructor(private store$: Store<AppStoreModule>) {
+  constructor(private store$: Store<AppStoreModule>,
+              private storageService:StorageService) {
     this.store$.pipe(select(getPlayer)).subscribe(res => this.playerState = res);
     this.store$.pipe(select(getMember)).subscribe(res=>this.memberState = res)
   }
@@ -116,5 +118,15 @@ export class BatchActionsService {
       this.store$.dispatch(SetModalType({modalType}))
     }
     this.store$.dispatch(SetModalVisible({modalVisible}))
+  }
+
+
+  //用户退出
+  userOutLogin(){
+    this.storageService.removeStorage('user_id')
+    this.storageService.removeStorage('user_info')
+    this.storageService.removeStorage('token')
+    this.storageService.removeStorage('cookie','session')
+    this.store$.dispatch(SetUserID({userId:0}))
   }
 }

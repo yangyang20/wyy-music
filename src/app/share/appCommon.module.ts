@@ -42,6 +42,7 @@ import {NzAlertModule} from "ng-zorro-antd/alert";
     NzFormModule,
     NzAlertModule,
     NzListModule,
+    NzToolTipModule,
   ],
   exports:[
     NzRadioModule,
@@ -63,6 +64,7 @@ import {NzAlertModule} from "ng-zorro-antd/alert";
     NzFormModule,
     NzAlertModule,
     NzListModule,
+    NzToolTipModule,
   ]
 })
 export class AppCommonModule { }

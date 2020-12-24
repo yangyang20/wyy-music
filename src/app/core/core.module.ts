@@ -7,6 +7,7 @@ import {ShareModule} from '../share/share.module';
 import {PagesModule} from '../pages/pages.module';
 import {AppRoutingModule} from '../app-routing.module';
 import {AppStoreModule} from '../store';
+import {httpInterceptorProviders} from "../service/http-interceptors";
 
 
 
@@ -27,6 +28,9 @@ import {AppStoreModule} from '../store';
     ShareModule,
     AppRoutingModule
   ],
+  providers:[
+    httpInterceptorProviders
+  ]
 })
 export class CoreModule {
   constructor(@SkipSelf() @Optional() parentModule: CoreModule) {

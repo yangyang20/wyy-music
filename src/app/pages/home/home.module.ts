@@ -4,6 +4,7 @@ import { HomeComponent } from './home.component';
 import {ShareModule} from "../../share/share.module";
 import { WyCarouselComponent } from './components/wy-carousel/wy-carousel.component';
 import { MemberCardComponent } from './components/member-card/member-card.component';
+import {NzToolTipModule} from "ng-zorro-antd/tooltip";
 
 
 
@@ -11,7 +12,7 @@ import { MemberCardComponent } from './components/member-card/member-card.compon
   declarations: [HomeComponent, WyCarouselComponent, MemberCardComponent],
   imports: [
     ShareModule,
-    HomeRoutingModule
+    HomeRoutingModule,
   ]
 })
 export class HomeModule { }

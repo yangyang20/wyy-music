@@ -1,15 +1,18 @@
 import {Component} from '@angular/core';
-import {LoginParams, User} from './service/data-types/member.type';
+import {LoginParams, Profile, User} from './service/data-types/member.type';
 import {Observable} from "rxjs";
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {SearchService} from "./service/search.service";
 import {ModalTypes} from "./store/reducers/member.reducer";
-import {Store} from "@ngrx/store";
+import {select, Store} from "@ngrx/store";
 import {AppStoreModule} from "./store";
-import {SetModalType} from "./store/actions/member.action";
+import {SetModalType, SetUserID} from "./store/actions/member.action";
 import {BatchActionsService} from "./store/batch-actions.service";
 import {MemberService} from "./service/member.service";
 import {NzMessageService} from 'ng-zorro-antd/message';
+import {StorageService} from "./service/storage.service";
+import {getMember, getUserId} from "./store/selectors/member.selectors";
+
 
 
 
@@ -31,17 +34,30 @@ export class AppComponent {
     }
   ];
 
-  user: User | undefined;
-
+  user?: User;
   routeTitle = '';
   private navEnd!: Observable<NavigationEnd>;
+
   constructor(private activateRoute:ActivatedRoute,
               private router:Router,
               private searchService:SearchService,
               private store$:Store<AppStoreModule>,
               private batchActionsService:BatchActionsService,
               private memberService:MemberService,
-              private messageServe:NzMessageService) {
+              private messageServe:NzMessageService,
+              private storageService:StorageService) {
+
+    const userId = this.storageService.getStorage('user_id')
+    if (userId){
+      this.store$.dispatch(SetUserID({userId}))
+      const user = this.storageService.getStorage('user_info')
+      if (user){
+        this.user = JSON.parse(user)
+      }else{
+        this.getUserDetail(userId)
+      }
+    }
+
   }
 
 
@@ -52,11 +68,7 @@ export class AppComponent {
 
 
   openModal(modalType:'loginByPhone' | 'register'){
-    if (modalType ==='loginByPhone'){
-      this.batchActionsService.controlModal(true,ModalTypes.LoginByPhone)
-    }else if (modalType === 'register'){
-      this.batchActionsService.controlModal(true,ModalTypes.Register)
-    }
+    this.batchActionsService.controlModal(true,(modalType as ModalTypes))
   }
 
 
@@ -64,18 +76,36 @@ export class AppComponent {
   onLogin(loginParams:LoginParams){
     this.memberService.login(loginParams).subscribe(res=>{
       if (res.code ==200){
-        console.log(res);
-        this.user = res.profile
+        const userId = res.profile!.userId
         this.batchActionsService.controlModal(false)
-        // window['localStorage']
-        localStorage.setItem('user_id',String(this.user!.profile.userId))
+        this.storageService.setStorage({key:'user_id',value:String(userId)})
+        this.storageService.setStorage({key:'token',value:res.token})
+        this.storageService.setStorage({key:'cookie',value:res.cookie},'session')
+        this.store$.dispatch(SetUserID({userId:userId}))
+        this.getUserDetail(userId)
         this.alertMessage('success','登录成功')
       }else {
         this.alertMessage('error',res.msg|| '登录失败')
       }
     },error => {
-      console.log(error);
       this.alertMessage('error',error.msg|| '登录失败')
+    })
+  }
+
+
+  outLogin(){
+    this.memberService.logout().subscribe(()=>{
+      this.batchActionsService.userOutLogin()
+      this.user = undefined
+      this.alertMessage('success','退出成功')
+    })
+
+  }
+
+  private getUserDetail(uid:number){
+    this.memberService.getUserDetail(uid).subscribe(user=>{
+      this.user = user
+      this.storageService.setStorage({key:'user_info',value:JSON.stringify(user)})
     })
   }
 

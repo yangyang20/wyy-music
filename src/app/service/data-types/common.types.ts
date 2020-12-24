@@ -97,3 +97,8 @@ export interface SearchResult {
   playlists?:SongSheet[],
   songs?:Song[],
 }
+
+
+export interface AnyJson {
+  [key:string]:any
+}
