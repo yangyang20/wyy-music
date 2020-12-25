@@ -12,13 +12,7 @@ export class CommonInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler):
     Observable<HttpEvent<any>> {
 
-    // const token = window['localStorage'].getItem('token')
-    // let newReq
-    // if (token){
-    //   newReq = req.clone({ setHeaders: { token } });
-    // }else {
-     const newReq = req.clone({ withCredentials: true});
-    // }
+    const newReq = req.clone({ withCredentials: true});
 
     return next.handle(newReq);
   }

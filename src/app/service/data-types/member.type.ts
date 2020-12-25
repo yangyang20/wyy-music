@@ -1,4 +1,4 @@
-import {Song} from './common.types';
+import {Song, SongSheet} from './common.types';
 
 
 export interface Profile{
@@ -63,4 +63,9 @@ export interface RecordVal {
   playCount: number;
   score: number;
   song: Song;
+}
+
+export interface UserSheet {
+  self: SongSheet[];
+  subscribed: SongSheet[];
 }
