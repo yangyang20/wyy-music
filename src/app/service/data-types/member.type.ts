@@ -1,4 +1,4 @@
-
+import {Song} from './common.types';
 
 
 export interface Profile{
@@ -54,6 +54,13 @@ export interface Signin {
   msg?: string;
 }
 
-export interface Interface {
-  
+type recordKeys = 'weekData' | 'allData';
+export type UserRecord = {
+  [key in recordKeys]: RecordVal[];
+};
+
+export interface RecordVal {
+  playCount: number;
+  score: number;
+  song: Song;
 }

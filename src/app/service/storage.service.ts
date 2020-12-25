@@ -23,4 +23,5 @@ export class StorageService {
   removeStorage(key:string,type:string='local'){
     (window as { [key: string]: any })[type + 'Storage'].removeItem(key)
   }
+  
 }

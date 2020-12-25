@@ -1,13 +1,13 @@
 import {Inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {API_CONFIG, ServiceModule} from "./service.module";
-import {LoginParams, LoginRes, Signin, User} from './data-types/member.type';
+import {LoginParams, LoginRes, RecordVal, Signin, User, UserRecord} from './data-types/member.type';
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {convertObj} from '../utils/object';
 
 
-export enum Record {
+export enum RecordType {
   allData,
   weekData,
 }
@@ -48,11 +48,8 @@ export class MemberService{
 
 
   //听歌记录
-  getRecord(uid:number,type_dis:'allData'|'weekData'){
-    const _type_dis: keyof typeof Record = type_dis;
-    const type = Record[_type_dis]
-
+  getRecord(uid:number,type = RecordType.weekData):Observable<RecordVal[]>{
     const params = {params:new HttpParams().set('uid',String(uid)).set('type',String(type))}
-    // return this.http.get(this.url+'',params).pipe(map(res=>res.))
+    return this.http.get<UserRecord>(this.url+'',params).pipe(map((res:UserRecord)=>res[(RecordType[type] as keyof UserRecord)]))
   }
 }
