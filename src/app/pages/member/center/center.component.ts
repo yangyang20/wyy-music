@@ -17,6 +17,7 @@ export class CenterComponent implements OnInit {
     this.route.data.pipe(map(res => res.user)).subscribe(([user, userRecord, userSheet])=>{
       this.user = user;
       this.records = userRecord.slice(0, 10);
+      console.log(this.records);
       this.userSheet = userSheet;
       // this.listenCurrentSong();
     })

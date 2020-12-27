@@ -1,36 +1,32 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation} from '@angular/core';
 import {SongSheet} from "../../../service/data-types/common.types";
 
 @Component({
   selector: 'app-wy-sheet-table',
   templateUrl: './wy-sheet-table.component.html',
-  styleUrls: ['./wy-sheet-table.component.less']
+  styleUrls: ['./wy-sheet-table.component.less'],
+  encapsulation: ViewEncapsulation.None
 })
-export class WySheetTableComponent implements OnInit {
+export class WySheetTableComponent implements OnInit,OnChanges {
 
-  @Input() sheetInfo:SongSheet = {
-    id:0,
-    name:'',
-    picUrl:'',
-    playCount:0,
-    tracks:[],
-    coverImgUrl:'',
-    creator:{avatarUrl:'', nickname:'string'},
-    createTime:0,
-    subscribedCount:0,
-    shareCount:0,
-    tags:[],
-    userId:0,
-    subscribed:false,
-    description:''
-  }
+  @Input() songList:any[] = []
+
+  @Input() currentIndex=-1
+
+  @Input() showContent:'album'|'playCount'|undefined
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
+
+
   onAddSong(){
 
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
   }
 }

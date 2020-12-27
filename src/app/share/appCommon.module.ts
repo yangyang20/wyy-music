@@ -17,6 +17,7 @@ import {NzGridModule} from "ng-zorro-antd/grid";
 import {NzFormModule} from "ng-zorro-antd/form";
 import {NzListModule} from "ng-zorro-antd/list";
 import {NzAlertModule} from "ng-zorro-antd/alert";
+import {NzDividerModule} from 'ng-zorro-antd/divider';
 
 
 
@@ -43,6 +44,7 @@ import {NzAlertModule} from "ng-zorro-antd/alert";
     NzAlertModule,
     NzListModule,
     NzToolTipModule,
+    NzDividerModule
   ],
   exports:[
     NzRadioModule,
@@ -65,6 +67,7 @@ import {NzAlertModule} from "ng-zorro-antd/alert";
     NzAlertModule,
     NzListModule,
     NzToolTipModule,
+    NzDividerModule
   ]
 })
 export class AppCommonModule { }

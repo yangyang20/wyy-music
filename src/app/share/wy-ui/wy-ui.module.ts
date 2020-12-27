@@ -14,10 +14,11 @@ import { WySheetTableComponent } from './wy-sheet-table/wy-sheet-table.component
       RouterModule,
       WySearchModule,
     ],
-  exports:[
-    SingerSheetComponent,
-    PlayCountPipe,
-    WySearchModule,
-  ]
+    exports: [
+        SingerSheetComponent,
+        PlayCountPipe,
+        WySearchModule,
+        WySheetTableComponent,
+    ]
 })
 export class WyUiModule { }

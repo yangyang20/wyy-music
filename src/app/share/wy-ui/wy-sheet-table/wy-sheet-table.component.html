@@ -1,20 +1,10 @@
 <div class="wy-sec">
-  <div class="u-title wy-sec-wrap clearfix">
-    <h3 class="wy-sec-tit">
-      <span class="f-ff2"><ng-content select="title"></ng-content></span>
-    </h3>
-    <span class="sub s-fc3">
-      <ng-content select="content"></ng-content>
-    </span>
-    <div class="more s-fc3">
-      <ng-content select="right"></ng-content>
-    </div>
-  </div>
+  <ng-content></ng-content>
 
   <nz-table
     class="wy-table"
     #basicTable
-    [nzData]="sheetInfo.tracks"
+    [nzData]="songList"
     [nzFrontPagination]="false"
     nzBordered
     nzNoResult="暂无音乐！">
@@ -50,7 +40,9 @@
           <em [hidden]="isLast">/</em>
         </ng-container>
       </td>
-      <td>{{item.al.name}}</td>
+
+      <td *ngIf="showContent === 'album'">{{item.al.name}}</td>
+      <td *ngIf="showContent === 'playCount'">{{item.playCount}}</td>
     </tr>
     </tbody>
   </nz-table>

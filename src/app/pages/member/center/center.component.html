@@ -36,6 +36,20 @@
     </div>
 
 
+    <app-wy-sheet-table [songList]="records" [showContent]="'playCount'">
+      <div class="u-title wy-sec-wrap clearfix">
+        <h3 class="wy-sec-tit"><span class="f-ff2">听歌排行</span></h3>
+        <span class="sub s-fc3">
+          累计听歌{{user.listenSongs}}首
+        </span>
+        <div class="more tab-type">
+          <span  >最近一周</span>
+          <nz-divider nzType="vertical"></nz-divider>
+          <span  >所有时间</span>
+        </div>
+      </div>
+    </app-wy-sheet-table>
+
     <a class="look-more" [routerLink]="['/records', user.profile.userId]">查看更多&gt;</a>
 
     <div class="wy-sec sheets">
