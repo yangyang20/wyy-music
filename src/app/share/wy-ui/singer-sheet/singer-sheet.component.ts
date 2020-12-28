@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {SongSheet} from "../../../service/data-types/common.types";
 
 @Component({
@@ -6,7 +6,7 @@ import {SongSheet} from "../../../service/data-types/common.types";
   templateUrl: './singer-sheet.component.html',
   styleUrls: ['./singer-sheet.component.less']
 })
-export class SingerSheetComponent implements OnInit {
+export class SingerSheetComponent implements OnInit{
 
   @Input()sheet:SongSheet = {
     id:1,
@@ -19,11 +19,18 @@ export class SingerSheetComponent implements OnInit {
 
   constructor() { }
 
+
+
   ngOnInit(): void {
   }
 
 
   getSheet(id:number){
     this.onPlay.emit(id)
+  }
+
+
+  sheetImg(sheet:SongSheet){
+    return sheet.picUrl?sheet.picUrl:sheet.coverImgUrl
   }
 }

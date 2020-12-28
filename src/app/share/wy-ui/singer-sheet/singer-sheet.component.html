@@ -1,6 +1,6 @@
 <ng-container>
   <a class="cover" [routerLink]="['/sheetInfo',sheet.id]">
-    <img [src]="sheet.picUrl" [alt]="sheet.name">
+    <img [src]="sheetImg(sheet)" [alt]="sheet.name">
     <div class="bottom">
       <div class="num">
         <i class="icon erji"></i>
