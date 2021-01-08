@@ -1,5 +1,7 @@
 import {InjectionToken, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {environment} from "../../environments/environment";
+
 
 export const API_CONFIG = new InjectionToken('ApiConfigToken')
 
@@ -9,7 +11,7 @@ export const API_CONFIG = new InjectionToken('ApiConfigToken')
     CommonModule
   ],
   providers:[
-    {provide:API_CONFIG,useValue:'http://localhost:3000/'}
+    {provide:API_CONFIG,useValue:environment.baseUrl}
   ]
 })
 export class ServiceModule { }
